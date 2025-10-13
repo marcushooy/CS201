@@ -1,35 +1,64 @@
 package Models;
 
 public class SeatReview implements ReviewRecord {
+    // Core interface fields
     private String airlineName;
-    private String aircraftType;
-    private String seatConfiguration;
     private String date;
     private double overallRating;
     private String country;
     private String content;
     
-    public SeatReview(String airlineName, String aircraftType, String seatConfiguration, String date, double overallRating, String country, String content) {
+    // Additional CSV columns
+    private String link;
+    private String title;
+    private String author;
+    private String aircraft;
+    private String seatLayout;
+    private String dateFlown;
+    private String cabinFlown;
+    private String typeTraveller;
+    private double seatLegroomRating;
+    private double seatReclineRating;
+    private double seatWidthRating;
+    private double aisleSpaceRating;
+    private double viewingTvRating;
+    private double powerSupplyRating;
+    private double seatStorageRating;
+    private int recommended;
+    
+    public SeatReview(String airlineName, String link, String title, String author, String country,
+                     String date, String content, String aircraft, String seatLayout, String dateFlown,
+                     String cabinFlown, String typeTraveller, double overallRating, double seatLegroomRating,
+                     double seatReclineRating, double seatWidthRating, double aisleSpaceRating,
+                     double viewingTvRating, double powerSupplyRating, double seatStorageRating,
+                     int recommended) {
         this.airlineName = airlineName;
-        this.aircraftType = aircraftType;
-        this.seatConfiguration = seatConfiguration;
-        this.date = date;
-        this.overallRating = overallRating;
+        this.link = link;
+        this.title = title;
+        this.author = author;
         this.country = country;
+        this.date = date;
         this.content = content;
+        this.aircraft = aircraft;
+        this.seatLayout = seatLayout;
+        this.dateFlown = dateFlown;
+        this.cabinFlown = cabinFlown;
+        this.typeTraveller = typeTraveller;
+        this.overallRating = overallRating;
+        this.seatLegroomRating = seatLegroomRating;
+        this.seatReclineRating = seatReclineRating;
+        this.seatWidthRating = seatWidthRating;
+        this.aisleSpaceRating = aisleSpaceRating;
+        this.viewingTvRating = viewingTvRating;
+        this.powerSupplyRating = powerSupplyRating;
+        this.seatStorageRating = seatStorageRating;
+        this.recommended = recommended;
     }
     
+    // Interface methods
     @Override
     public String getName() {
         return airlineName;
-    }
-    
-    public String getAircraftType() {
-        return aircraftType;
-    }
-    
-    public String getSeatConfiguration() {
-        return seatConfiguration;
     }
     
     @Override
@@ -51,4 +80,22 @@ public class SeatReview implements ReviewRecord {
     public String getContent() {
         return content;
     }
+    
+    // Additional getters
+    public String getLink() { return link; }
+    public String getTitle() { return title; }
+    public String getAuthor() { return author; }
+    public String getAircraft() { return aircraft; }
+    public String getSeatLayout() { return seatLayout; }
+    public String getDateFlown() { return dateFlown; }
+    public String getCabinFlown() { return cabinFlown; }
+    public String getTypeTraveller() { return typeTraveller; }
+    public double getSeatLegroomRating() { return seatLegroomRating; }
+    public double getSeatReclineRating() { return seatReclineRating; }
+    public double getSeatWidthRating() { return seatWidthRating; }
+    public double getAisleSpaceRating() { return aisleSpaceRating; }
+    public double getViewingTvRating() { return viewingTvRating; }
+    public double getPowerSupplyRating() { return powerSupplyRating; }
+    public double getSeatStorageRating() { return seatStorageRating; }
+    public int getRecommended() { return recommended; }
 }
