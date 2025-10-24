@@ -1,4 +1,4 @@
-package Models;
+package com.reviews.Models;
 
 public class AirportReview implements ReviewRecord {
     // Core interface fields
