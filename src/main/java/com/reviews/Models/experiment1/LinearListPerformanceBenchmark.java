@@ -1,4 +1,4 @@
-package com.reviews.experiments;
+package com.reviews.Models.experiment1;
 
 import com.reviews.Models.AirlineReview;
 import com.reviews.Models.ReviewRecord;
