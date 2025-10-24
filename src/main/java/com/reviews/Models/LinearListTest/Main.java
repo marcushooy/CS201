@@ -1,4 +1,4 @@
-package com.reviews.Models.experiment1;
+package com.reviews.Models.LinearListTest;
 
 /**
  * Main class for Experiment 1: Linear List Baseline Implementation
