@@ -98,4 +98,10 @@ public class SeatReview implements ReviewRecord {
     public double getPowerSupplyRating() { return powerSupplyRating; }
     public double getSeatStorageRating() { return seatStorageRating; }
     public int getRecommended() { return recommended; }
+
+    @Override
+    public String getAirline() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAirline'");
+    }
 }

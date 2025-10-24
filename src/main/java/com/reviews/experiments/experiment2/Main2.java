@@ -1,5 +1,6 @@
 package com.reviews.experiments.experiment2;
 
+import com.reviews.experiments.experiment2.AVLDemo;
 /**
  * Main class for Experiment 2: AVL Tree Implementation
  * 

@@ -5,4 +5,5 @@ public interface ReviewRecord {
     double getOverallRating(); //overall rating
     String getCountry(); //country of the airline/airport
     String getContent(); //content of the review
+    String getAirline(); // airline name
 }

@@ -98,4 +98,10 @@ public class AirportLoungeReview implements ReviewRecord {
     public double getWifiConnectivityRating() { return wifiConnectivityRating; }
     public double getStaffServiceRating() { return staffServiceRating; }
     public int getRecommended() { return recommended; }
+
+    @Override
+    public String getAirline() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAirline'");
+    }
 }
