@@ -1,4 +1,4 @@
-package com.reviews.Models.LinearListTest;
+package com.reviews.experiments.LinearListTest;
 
 import com.reviews.Models.AirlineReview;
 import com.reviews.Models.ReviewRecord;

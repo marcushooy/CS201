@@ -1,4 +1,4 @@
-package com.reviews.Models.LinearListTest;
+package com.reviews.experiments.LinearListTest;
 
 /**
  * Main class for Experiment 1: Linear List Baseline Implementation
@@ -18,7 +18,7 @@ public class Main {
         System.out.println();
         
         // Run the comprehensive demonstration
-        LinearListDemo.main(args);
+        LinearListDemo.main(args);  
         
         System.out.println();
         System.out.println("=== Experiment 1 Complete ===");
