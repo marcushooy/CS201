@@ -1,4 +1,4 @@
-package com.reviews.experiments.LinearListTest;
+package com.reviews.experiments.experiment1;
 
 /**
  * Main class for Experiment 1: Linear List Baseline Implementation
@@ -12,7 +12,7 @@ package com.reviews.experiments.LinearListTest;
  * - Recency-Biased Average Rating: O(N)
  * - Search by airline: O(N)
  */
-public class Main {
+public class Main1 {
     public static void main(String[] args) {
         System.out.println("=== Experiment 1: Linear List Baseline ===");
         System.out.println();

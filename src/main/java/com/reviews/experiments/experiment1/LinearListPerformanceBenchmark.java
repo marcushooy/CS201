@@ -1,4 +1,4 @@
-package com.reviews.experiments.LinearListTest;
+package com.reviews.experiments.experiment1;
 
 import com.reviews.Models.AirlineReview;
 import com.reviews.Models.ReviewRecord;
@@ -136,6 +136,31 @@ public class LinearListPerformanceBenchmark {
         
         double avgTimeMs = (totalTime / (double) totalOperations) / 1_000_000.0;
         return new BenchmarkResult("RBAR Calculation", avgTimeMs, totalOperations, 0);
+    }
+    
+    /**
+     * Benchmark search operations.
+     */
+    public static BenchmarkResult benchmarkSearch(LinearListReviewStore store, int iterations) {
+        String[] airlines = store.getAllAirlines().toArray(new String[0]);
+        Random random = new Random(789);
+        
+        long totalTime = 0;
+        int totalOperations = 0;
+        
+        for (int i = 0; i < iterations; i++) {
+            String airline = airlines[random.nextInt(airlines.length)];
+            
+            long startTime = System.nanoTime();
+            store.getReviewsByAirline(airline);
+            long endTime = System.nanoTime();
+            
+            totalTime += (endTime - startTime);
+            totalOperations++;
+        }
+        
+        double avgTimeMs = (totalTime / (double) totalOperations) / 1_000_000.0;
+        return new BenchmarkResult("Search by Airline", avgTimeMs, totalOperations, 0);
     }
     
     /**

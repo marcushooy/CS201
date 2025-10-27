@@ -45,7 +45,7 @@ We use a consistent **recency-biased ranking algorithm** across all experiments:
 |------------|----------------|--------|--------------|--------------------------|
 | **1** | **Linear List (ArrayList)** | ✅ **Complete** | Baseline implementation using ArrayList for storing reviews | Insert: O(1), Search: O(N), Top-K: O(N log N), RBAR: O(N) |
 | **2** | **AVL Tree** | ✅ **Complete** | Self-balancing binary search tree with automatic rotations | Insert: O(log N), Search: O(log N), Top-K: O(N log N), RBAR: O(N) |
-| **3** | **HashMap + Linked List Hybrid** | ⚠️ **Planned** | Maps airlines to scores while keeping recent updates in an ordered list | Lookup: O(1), Update: O(1), Rebuild ranking: O(N log N) |
+| **3** | **Recency-Biased Tree (RBT)** | ✅ **Complete** | Splay tree that intentionally biases recent reviews to root for fast access | Insert: O(log N), Recent Search: O(1), Old Search: O(N), Top-K: O(k) |
 
 All implementations use the **same recency weighting algorithm**, allowing fair comparison of performance based solely on data structure design.
 
@@ -76,9 +76,9 @@ All implementations use the **same recency weighting algorithm**, allowing fair 
 |----------------|---------|---------|-----------------|------------------|------------------|
 | **Linear List** | O(1) amortized | O(N) | O(N log N) | O(N) | O(N) |
 | **AVL Tree** | O(log N) | O(log N) | O(N log N) | O(N) | O(N) |
-| **HashMap + Linked List** | O(1)* | O(1)* | O(N log N) | O(N) | O(N) |
+| **RBT Tree** | O(log N) | O(log N)* | O(k) for recent | O(N) | O(N) |
 
-\*Average case assuming uniform hashing and efficient updates.
+*Recent reviews: O(log N) to O(1), Old reviews: O(N)
 
 ### Key Performance Insights:
 - **AVL Tree** provides significant improvement in search operations: O(N) → O(log N)
@@ -99,30 +99,34 @@ CS201/
 │   │   ├── AirportLoungeReview.java    # Airport lounge review implementation
 │   │   └── SeatReview.java             # Seat review implementation
 │   │
-│   ├── datastructures/                  # Data structure implementations
-│   │   ├── LinearListReviewStore.java  # Experiment 1: ArrayList baseline
-│   │   ├── AVLNode.java                # AVL tree node implementation
-│   │   └── AVLReviewStore.java         # Experiment 2: AVL tree implementation
-│   │
-│   ├── experiments/
-│   │   ├── LinearListTest/             # Experiment 1 testing & benchmarking
+│   ├── experiments/                     # Experiment implementations
+│   │   ├── BenchmarkUtils.java         # Shared benchmark utilities
+│   │   ├── UnifiedBenchmarkRunner.java # Cross-experiment comparison
+│   │   ├── LinearListTest/             # Experiment 1: Linear List
 │   │   │   ├── Main.java              # Experiment 1 main runner
-│   │   │   ├── LinearListDemo.java    # Demonstration of linear list features
-│   │   │   ├── LinearListReviewStoreTest.java  # Comprehensive test suite
-│   │   │   └── LinearListPerformanceBenchmark.java  # Performance analysis
-│   │   │
+│   │   │   ├── LinearListDemo.java    # Demonstration
+│   │   │   ├── LinearListReviewStoreTest.java  # Test suite
+│   │   │   ├── LinearListPerformanceBenchmark.java  # Performance analysis
+│   │   │   └── results.csv            # Benchmark results
 │   │   ├── experiment2/                # Experiment 2: AVL Tree
 │   │   │   ├── Main2.java             # Experiment 2 main runner
-│   │   │   ├── AVLDemo.java           # Demonstration of AVL tree features
-│   │   │   ├── AVLReviewStoreTest.java # Comprehensive test suite
+│   │   │   ├── AVLDemo.java           # Demonstration
+│   │   │   ├── AVLReviewStoreTest.java # Test suite
 │   │   │   ├── AVLPerformanceBenchmark.java # Performance analysis
-│   │   │   └── results.csv            # Performance results data
-│   │   │
-│   │   └── experiment3/                # Experiment 3: HashMap + Linked List (Planned)
-│   │       ├── Main3.java             # Placeholder
-│   │       └── results.csv            # Empty placeholder
+│   │   │   └── results.csv            # Benchmark results
+│   │   └── experiment3/                # Experiment 3: RBT
+│   │       ├── Main3.java             # Experiment 3 main runner
+│   │       ├── RBTDemo.java           # Demonstration
+│   │       ├── RBTReviewStoreTest.java # Test suite
+│   │       ├── RBTPerformanceBenchmark.java # Performance analysis
+│   │       └── results.csv            # Benchmark results
 │   │
-│   └── NewClass.java                   # Unused placeholder class
+│   └── datastructures/                  # Data structure implementations
+│       ├── LinearListReviewStore.java  # Experiment 1 implementation
+│       ├── AVLNode.java                # AVL tree node
+│       ├── AVLReviewStore.java         # Experiment 2 implementation
+│       ├── RBTNode.java                # RBT tree node
+│       └── RBTReviewStore.java         # Experiment 3 implementation
 │
 ├── data/                               # Dataset files
 │   ├── airline.csv                    # 41,457 airline reviews
@@ -143,58 +147,73 @@ CS201/
 
 ### Running Experiments
 
-#### Experiment 1: Linear List Baseline
+#### Run All Experiments (Recommended)
+The unified benchmark runner compares all three data structures:
 ```bash
-# Navigate to the project directory
-cd CS201/src/main/java/com/reviews/experiments/LinearListTest/
+# Navigate to the experiments directory
+cd src/main/java/com/reviews/experiments/
 
-# Compile and run
+# Compile and run unified benchmark
 javac *.java
-java Main
+java UnifiedBenchmarkRunner
+```
+This will run comparative benchmarks across all experiments and generate results.csv files for each.
+
+#### Individual Experiments
+
+**Experiment 1: Linear List Baseline**
+```bash
+cd src/main/java/com/reviews/experiments/experiment1/
+javac *.java
+java Main1
 ```
 
-#### Experiment 2: AVL Tree Implementation
+**Experiment 2: AVL Tree Implementation**
 ```bash
-# Navigate to the project directory  
-cd CS201/src/main/java/com/reviews/experiments/experiment2/
-
-# Compile and run
+cd src/main/java/com/reviews/experiments/experiment2/
 javac *.java
 java Main2
 ```
 
+**Experiment 3: RBT Implementation**
+```bash
+cd src/main/java/com/reviews/experiments/experiment3/
+javac *.java
+java Main3
+```
+
 ### Individual Components
-- **Run Tests Only**: `java LinearListReviewStoreTest` or `java AVLReviewStoreTest`
-- **Run Benchmarks Only**: `java LinearListPerformanceBenchmark` or `java AVLPerformanceBenchmark`
-- **Run Demos Only**: `java LinearListDemo` or `java AVLDemo`
+Each experiment directory contains:
+- **Main Runner**: `java Main1`, `java Main2`, or `java Main3` - Runs the full demo and tests
+- **Tests Only**: `java LinearListReviewStoreTest`, `java AVLReviewStoreTest`, `java RBTReviewStoreTest`
+- **Benchmarks Only**: `java LinearListPerformanceBenchmark`, `java AVLPerformanceBenchmark`, `java RBTPerformanceBenchmark`
+- **Demos Only**: `java LinearListDemo`, `java AVLDemo`, `java RBTDemo`
 
 ---
 
 ## 📊 Current Implementation Status
 
 ### ✅ Completed Features
-- **Data Models**: Complete interface and 4 review type implementations
+- **Data Theory**: Complete interface and 4 review type implementations
 - **Experiment 1**: Full linear list implementation with comprehensive testing
 - **Experiment 2**: Complete AVL tree implementation with automatic balancing
-- **Testing Framework**: Comprehensive test suites for both experiments
+- **Experiment 3**: Complete RBT (Recency-Biased Tree) implementation with splay operations
+- **Testing Framework**: Comprehensive test suites for all three experiments
 - **Performance Benchmarking**: Detailed performance analysis and comparison
+- **Unified Benchmark Runner**: Cross-experiment comparison with automated CSV generation
 - **Recency Weighting**: Consistent algorithm across all implementations
 
-### ⚠️ Planned Features
-- **Experiment 3**: HashMap + Linked List hybrid implementation
-- **Performance Comparison**: Cross-experiment analysis and visualization
-- **Real Dataset Integration**: Loading and processing actual Skytrax data
-
-### 🔬 Key Findings (Preliminary)
-- **AVL Tree** shows significant improvement in search operations over linear list
+### 🔬 Key Findings
+- **AVL Tree** shows significant improvement in search operations over linear list: O(N) → O(log N)
+- **RBT** provides O(1) to O(log N) access for recent reviews, optimal for recency-biased workloads
 - **Recency weighting** effectively prioritizes recent reviews while maintaining historical context
-- **Tree balancing** ensures consistent performance regardless of insertion order
-- **Memory usage** is comparable across implementations (O(N) space complexity)
+- **Tree balancing** ensures consistent performance regardless of insertion order in AVL
+- **Memory usage** is comparable across all implementations (O(N) space complexity)
 
 ---
 
-## 🎯 Next Steps
-1. Implement Experiment 3 (HashMap + Linked List hybrid)
-2. Conduct comprehensive performance comparison across all three data structures
-3. Analyze real-world performance vs theoretical complexity
-4. Generate performance visualization and analysis reports
+## 🎯 Future Enhancements
+1. Real Dataset Integration: Load and process actual Skytrax CSV data
+2. Performance Visualization: Generate charts and graphs from benchmark results
+3. Memory Profiling: Measure actual memory usage differences
+4. Extended Testing: Add stress tests with larger datasets (100K+ reviews)
