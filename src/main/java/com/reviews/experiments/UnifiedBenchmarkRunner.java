@@ -252,18 +252,16 @@ public class UnifiedBenchmarkRunner {
                 grouped.get(prefix).add(data);
             }
             
-            // Write CSV for each structure to results folder
-            writeCSV("results/experiment1_linear_list.csv", grouped.get("LinearList"));
-            writeCSV("results/experiment2_avl_tree.csv", grouped.get("AVLTree"));
-            writeCSV("results/experiment3_rbt.csv", grouped.get("RBT"));
+            // Write CSV files to project root results/ folder
+            // When running from src/main/java/, we need to go up 3 levels
+            String resultsDir = "../../../results/";
             
-            // Also write to old locations for backward compatibility
-            writeCSV("src/main/java/com/reviews/experiments/experiment1/results.csv", grouped.get("LinearList"));
-            writeCSV("src/main/java/com/reviews/experiments/experiment2/results.csv", grouped.get("AVLTree"));
-            writeCSV("src/main/java/com/reviews/experiments/experiment3/results.csv", grouped.get("RBT"));
+            writeCSV(resultsDir + "experiment1_linear_list.csv", grouped.get("LinearList"));
+            writeCSV(resultsDir + "experiment2_avl_tree.csv", grouped.get("AVLTree"));
+            writeCSV(resultsDir + "experiment3_rbt.csv", grouped.get("RBT"));
             
             // Write unified comparison file
-            writeUnifiedComparisonCSV("results/unified_comparison.csv", allResults);
+            writeUnifiedComparisonCSV(resultsDir + "unified_comparison.csv", allResults);
             
         } catch (IOException e) {
             System.err.println("Error writing CSV files: " + e.getMessage());

@@ -15,9 +15,11 @@ public class ResultsAnalyzer {
     /**
      * Generate a comprehensive analysis report from CSV results.
      */
-    public static void generateAnalysisReport() {
+    public static void generateAnalysisReport(String resultsDir) {
         try {
-            String outputPath = "results/ANALYSIS_REPORT.md";
+            String outputPath = resultsDir + "PERFORMANCE_ANALYSIS.md";
+            java.io.File file = new java.io.File(outputPath);
+            file.getParentFile().mkdirs();
             FileWriter writer = new FileWriter(outputPath);
             
             writer.write("# CS201 Project - Performance Analysis Report\n\n");
@@ -194,9 +196,11 @@ public class ResultsAnalyzer {
     /**
      * Generate a quick reference summary file.
      */
-    public static void generateQuickSummary() {
+    public static void generateQuickSummary(String resultsDir) {
         try {
-            String outputPath = "results/SUMMARY.txt";
+            String outputPath = resultsDir + "SUMMARY.txt";
+            java.io.File file = new java.io.File(outputPath);
+            file.getParentFile().mkdirs();
             FileWriter writer = new FileWriter(outputPath);
             
             writer.write("╔════════════════════════════════════════════════════════════════════╗\n");
@@ -319,8 +323,9 @@ public class ResultsAnalyzer {
     
     public static void main(String[] args) {
         System.out.println("Generating analysis reports...\n");
-        generateAnalysisReport();
-        generateQuickSummary();
+        String resultsDir = "../../../results/";
+        generateAnalysisReport(resultsDir);
+        generateQuickSummary(resultsDir);
         System.out.println("\n✅ Analysis complete! Check the results/ folder.");
     }
 }

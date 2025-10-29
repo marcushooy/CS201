@@ -74,12 +74,15 @@ public class MasterRunner {
             System.out.println("╚═══════════════════════════════════════════════════════════════════╝");
             System.out.println();
             
-            ResultsAnalyzer.generateAnalysisReport();
-            ResultsAnalyzer.generateQuickSummary();
+            // Paths relative to src/main/java/ → project root
+            String resultsDir = "../../../results/";
+            
+            ResultsAnalyzer.generateAnalysisReport(resultsDir);
+            ResultsAnalyzer.generateQuickSummary(resultsDir);
             
             // ============ GENERATE CHART FILES ============
             System.out.println();
-            ChartGenerator.generateAllCharts("results/unified_comparison.csv", "results");
+            ChartGenerator.generateAllCharts(resultsDir + "unified_comparison.csv", resultsDir);
             
             // ============ SUMMARY ============
             printSummary();

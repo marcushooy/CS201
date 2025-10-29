@@ -155,45 +155,49 @@ CS201/
 
 ---
 
-## 🚀 How to Run the Experiments
+## 🚀 How to Run - 3 Simple Steps
 
-### ⚡ ONE-CLICK SOLUTION (NEW!)
+### Step 1: Compile (one time)
+```bash
+chmod +x compile.sh run.sh
+./compile.sh
+```
 
-**Easiest Way - Run Everything at Once:**
+### Step 2: Run Benchmarks
+```bash
+./run.sh
+```
+**This generates CSV files in `results/` folder**
 
-1. **Using Shell Script (Mac/Linux):**
-   ```bash
-   ./run.sh
-   ```
+### Step 3: Visualize (optional)
+```bash
+# Install Jupyter (one time):
+pip install jupyter pandas matplotlib seaborn
 
-2. **Using IDE (IntelliJ/VS Code/Eclipse):**
-   - Open `MasterRunner.java`
-   - Click the **Run** button
-   - Done! ✅
+# Run notebook:
+jupyter notebook CS201_Analysis.ipynb
 
-3. **Using Terminal:**
-   ```bash
-   cd src/main/java
-   javac com/reviews/experiments/MasterRunner.java
-   java com.reviews.experiments.MasterRunner
-   ```
+# In Jupyter: Cell → Run All
+```
 
-This will run all three experiments, generate all results, and display comparisons!
+**That's it!** All results will be in `results/` folder.
 
 ---
 
-## 📊 Results System
+## 📊 Results Location
 
-After running the project, check the **`results/`** folder for:
+**Everything is in ONE place:** `results/` folder
 
-- ⭐ **`SUMMARY.txt`** - Quick reference with key findings (view in terminal or editor)
-- ⭐ **`ANALYSIS_REPORT.md`** - Comprehensive analysis report with recommendations
-- ⭐ **`unified_comparison.csv`** - All experiments combined (ready for Excel/charts)
-- 📊 **`experiment1_linear_list.csv`** - Linear List detailed metrics
-- 📊 **`experiment2_avl_tree.csv`** - AVL Tree detailed metrics
-- 📊 **`experiment3_rbt.csv`** - RBT detailed metrics
+After running `./run.sh`, you'll find:
+- ✅ `1_search_comparison.csv` - Import to Excel
+- ✅ `2_insertion_comparison.csv` - Import to Excel
+- ✅ `3_rbar_comparison.csv` - Import to Excel
+- ✅ `4_topk_comparison.csv` - Import to Excel
+- ✅ `unified_comparison.csv` - All data combined
+- ✅ `PERFORMANCE_ANALYSIS.md` - Read this for insights!
+- ✅ `VISUAL_SUMMARY.txt` - ASCII charts
 
-**👉 See [`RESULTS_GUIDE.md`](RESULTS_GUIDE.md) for detailed information about the results system!**
+**For professional charts:** Run `CS201_Analysis.ipynb` in Jupyter
 
 ---
 

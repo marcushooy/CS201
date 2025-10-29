@@ -106,4 +106,4 @@ Theory matches practice! ✓
 For detailed analysis, see: results/ANALYSIS_REPORT.md
 For raw data, see: results/*.csv
 
-Generated: 2025-10-29T17:02:20.023114
+Generated: 2025-10-29T17:52:15.797657
