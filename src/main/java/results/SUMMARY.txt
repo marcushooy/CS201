@@ -1,0 +1,109 @@
+╔════════════════════════════════════════════════════════════════════╗
+║                                                                    ║
+║         CS201 PROJECT - RESULTS SUMMARY                            ║
+║         Performance Comparison: 3 Data Structures                  ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+TEAM: G3T4
+COURSE: CS201 - Data Structures and Algorithms
+INSTITUTION: Singapore Management University
+DATE: 2025-10-29
+
+════════════════════════════════════════════════════════════════════
+TEST CONFIGURATION
+════════════════════════════════════════════════════════════════════
+
+Data Source: Skytrax Airline Reviews (REAL DATA)
+Total Reviews: 41,457 authentic user reviews
+Test Sizes: 1,000 | 5,000 | 10,000 | 25,000 | 41,457
+Data Quality: 100% real CSV data (no synthetic data)
+
+════════════════════════════════════════════════════════════════════
+OVERALL WINNER: AVL TREE 🏆
+════════════════════════════════════════════════════════════════════
+
+AVL Tree provides:
+  ✓ 50-100x faster search than Linear List
+  ✓ O(log N) guaranteed performance
+  ✓ Automatic balancing
+  ✓ Production-ready scalability
+
+════════════════════════════════════════════════════════════════════
+PERFORMANCE SUMMARY
+════════════════════════════════════════════════════════════════════
+
+SEARCH OPERATIONS:
+  Winner: AVL Tree
+    - Linear List: O(N) - Very Slow
+    - AVL Tree: O(log N) - FAST ✓
+    - RBT: O(log N) - Fast
+
+INSERTION:
+  Winner: Linear List
+    - Linear List: O(1) - Fastest ✓
+    - AVL Tree: O(log N) - Good
+    - RBT: O(log N) - Good
+
+TOP-K RETRIEVAL:
+  Winner: Varies by K
+    - Small K: RBT best
+    - Large K: Similar performance
+
+SCALABILITY:
+  Winner: AVL Tree
+    - Maintains O(log N) even at 41,457 reviews
+    - Tree height = 15-16 (optimal)
+    - Always balanced ✓
+
+════════════════════════════════════════════════════════════════════
+RECOMMENDATIONS
+════════════════════════════════════════════════════════════════════
+
+USE AVL TREE FOR:
+  ✓ Production systems
+  ✓ Large datasets (>10,000 reviews)
+  ✓ Critical search performance
+  ✓ Balanced read/write workloads
+
+USE LINEAR LIST FOR:
+  ✓ Small datasets (<1,000 reviews)
+  ✓ Insert-heavy workloads
+  ✓ Simple implementations
+
+USE RBT FOR:
+  ✓ Recency-biased access patterns
+  ✓ Real-time trend analysis
+  ✓ Recent data prioritization
+
+════════════════════════════════════════════════════════════════════
+GENERATED FILES
+════════════════════════════════════════════════════════════════════
+
+📊 Detailed Results:
+  • results/experiment1_linear_list.csv
+  • results/experiment2_avl_tree.csv
+  • results/experiment3_rbt.csv
+
+📈 Analysis:
+  • results/unified_comparison.csv
+  • results/ANALYSIS_REPORT.md
+  • results/SUMMARY.txt (this file)
+
+════════════════════════════════════════════════════════════════════
+KEY TAKEAWAY
+════════════════════════════════════════════════════════════════════
+
+Data structure choice MATTERS!
+
+AVL Tree is 50-100x faster than Linear List for search operations
+when tested with 41,457 REAL airline reviews.
+
+Theory matches practice! ✓
+
+════════════════════════════════════════════════════════════════════
+
+For detailed analysis, see: results/ANALYSIS_REPORT.md
+For raw data, see: results/*.csv
+
+Generated: 2025-10-29T17:02:20.023114

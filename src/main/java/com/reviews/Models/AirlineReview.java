@@ -98,7 +98,6 @@ public class AirlineReview implements ReviewRecord {
 
     @Override
     public String getAirline() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAirline'");
+        return airlineName;
     }
 }

@@ -1,0 +1,271 @@
+# ============================================
+# CS201 Project - Git Ignore Configuration
+# ============================================
+
+# ==========================================
+# Java Compiled Files
+# ==========================================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.rar
+
+# ==========================================
+# Java Package Files
+# ==========================================
+*.jar
+*.war
+*.nar
+*.ear
+
+# ==========================================
+# Build Directories
+# ==========================================
+/target/
+/out/
+/build/
+/bin/
+/dist/
+*.log
+
+# ==========================================
+# IDE - IntelliJ IDEA
+# ==========================================
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+
+# ==========================================
+# IDE - Eclipse
+# ==========================================
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+# ==========================================
+# IDE - VS Code
+# ==========================================
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# ==========================================
+# IDE - NetBeans
+# ==========================================
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# ==========================================
+# macOS System Files
+# ==========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# ==========================================
+# Windows System Files
+# ==========================================
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# ==========================================
+# Linux System Files
+# ==========================================
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==========================================
+# Java and Build Tools
+# ==========================================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# ==========================================
+# Logs and Temporary Files
+# ==========================================
+*.log
+*.log.*
+logs/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*~
+
+# ==========================================
+# Test Coverage and Reports
+# ==========================================
+*.gcov
+*.gcda
+*.gcno
+coverage/
+*.cover
+.hypothesis/
+.pytest_cache/
+htmlcov/
+
+# ==========================================
+# Package Managers
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# Environment and Configuration
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# ==========================================
+# Database Files
+# ==========================================
+*.sqlite
+*.db
+*.sql
+
+# ==========================================
+# Project-Specific
+# ==========================================
+# Ignore generated result files in the results folder
+results/*.csv
+results/*.md
+results/*.txt
+# But keep the folder structure
+!results/.gitkeep
+
+# Ignore compiled class files anywhere in the project
+**/*.class
+
+# Ignore any backup files
+*~
+*.orig
+
+# ==========================================
+# Documentation Build Files
+# ==========================================
+docs/_build/
+site/
+
+# ==========================================
+# Cache Directories
+# ==========================================
+.cache/
+*.cache
+
+# ==========================================
+# Archives
+# ==========================================
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# ==========================================
+# Virtual Environments (if using Jython)
+# ==========================================
+venv/
+ENV/
+env/
+.venv
+
+# ==========================================
+# Keep These Files (Exceptions)
+# ==========================================
+# We want to keep VS Code configurations
+!.vscode/launch.json
+!.vscode/settings.json
+
+# Keep the shell script
+!run.sh
+
+# Keep documentation
+!*.md
+!*.txt
+
+# Keep data files
+!data/
+!data/*.csv
+
+# Keep source files
+!src/
+!*.java
+

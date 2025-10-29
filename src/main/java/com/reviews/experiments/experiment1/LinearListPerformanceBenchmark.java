@@ -3,6 +3,7 @@ package com.reviews.experiments.experiment1;
 import com.reviews.Models.AirlineReview;
 import com.reviews.Models.ReviewRecord;
 import com.reviews.datastructures.LinearListReviewStore;
+import com.reviews.experiments.BenchmarkUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,73 +27,16 @@ public class LinearListPerformanceBenchmark {
     private static final String[] TRAVELER_TYPES = {"Business", "Leisure"};
     
     /**
-     * Generate a large dataset of random airline reviews for performance testing.
-     */
-    public static List<ReviewRecord> generateTestData(int numReviews) {
-        List<ReviewRecord> reviews = new ArrayList<>();
-        Random random = new Random(42); // Fixed seed for reproducible results
-        LocalDate now = LocalDate.now();
-        
-        for (int i = 0; i < numReviews; i++) {
-            String airline = AIRLINE_NAMES[random.nextInt(AIRLINE_NAMES.length)];
-            String country = COUNTRIES[random.nextInt(COUNTRIES.length)];
-            String aircraft = AIRCRAFT_TYPES[random.nextInt(AIRCRAFT_TYPES.length)];
-            String cabin = CABIN_TYPES[random.nextInt(CABIN_TYPES.length)];
-            String travelerType = TRAVELER_TYPES[random.nextInt(TRAVELER_TYPES.length)];
-            
-            // Generate dates with bias towards recent reviews (last 2 years)
-            LocalDate reviewDate;
-            if (random.nextDouble() < 0.7) {
-                // 70% chance of recent review (last 2 years)
-                int daysAgo = random.nextInt(730);
-                reviewDate = now.minusDays(daysAgo);
-            } else {
-                // 30% chance of older review (2-10 years)
-                int daysAgo = 730 + random.nextInt(2920);
-                reviewDate = now.minusDays(daysAgo);
-            }
-            
-            // Generate realistic ratings (bias towards higher ratings)
-            double overallRating = generateRealisticRating(random);
-            double seatComfortRating = generateRealisticRating(random);
-            double cabinStaffRating = generateRealisticRating(random);
-            double foodBeveragesRating = generateRealisticRating(random);
-            double inflightEntertainmentRating = generateRealisticRating(random);
-            double groundServiceRating = generateRealisticRating(random);
-            double wifiConnectivityRating = generateRealisticRating(random);
-            double valueMoneyRating = generateRealisticRating(random);
-            
-            int recommended = overallRating >= 4.0 ? 1 : 0;
-            
-            AirlineReview review = new AirlineReview(
-                airline, "link" + i, "Review " + i, "Author " + i, country,
-                reviewDate.toString(), "Review content for test " + i, aircraft,
-                travelerType, cabin, "Route " + i, overallRating, seatComfortRating,
-                cabinStaffRating, foodBeveragesRating, inflightEntertainmentRating,
-                groundServiceRating, wifiConnectivityRating, valueMoneyRating, recommended
-            );
-            
-            reviews.add(review);
-        }
-        
-        return reviews;
-    }
-    
-    /**
-     * Generate realistic ratings with bias towards higher ratings.
-     */
-    private static double generateRealisticRating(Random random) {
-        // Use normal distribution centered around 3.5 with std dev 1.0
-        double rating = random.nextGaussian() * 1.0 + 3.5;
-        // Clamp to valid range [1.0, 5.0]
-        return Math.max(1.0, Math.min(5.0, Math.round(rating * 10.0) / 10.0));
-    }
-    
-    /**
      * Benchmark the top-k recent retrieval operation.
      */
     public static BenchmarkResult benchmarkTopKRetrieval(LinearListReviewStore store, int k, int iterations) {
         String[] airlines = store.getAllAirlines().toArray(new String[0]);
+        
+        // Safety check: ensure we have airlines to test with
+        if (airlines.length == 0) {
+            return new BenchmarkResult("Top-K Recent Retrieval", 0.0, 0, k);
+        }
+        
         Random random = new Random(123);
         
         long totalTime = 0;
@@ -118,6 +62,12 @@ public class LinearListPerformanceBenchmark {
      */
     public static BenchmarkResult benchmarkRBARCalculation(LinearListReviewStore store, int iterations) {
         String[] airlines = store.getAllAirlines().toArray(new String[0]);
+        
+        // Safety check: ensure we have airlines to test with
+        if (airlines.length == 0) {
+            return new BenchmarkResult("RBAR Calculation", 0.0, 0, 0);
+        }
+        
         Random random = new Random(456);
         
         long totalTime = 0;
@@ -143,6 +93,12 @@ public class LinearListPerformanceBenchmark {
      */
     public static BenchmarkResult benchmarkSearch(LinearListReviewStore store, int iterations) {
         String[] airlines = store.getAllAirlines().toArray(new String[0]);
+        
+        // Safety check: ensure we have airlines to test with
+        if (airlines.length == 0) {
+            return new BenchmarkResult("Search by Airline", 0.0, 0, 0);
+        }
+        
         Random random = new Random(789);
         
         long totalTime = 0;
@@ -203,8 +159,8 @@ public class LinearListPerformanceBenchmark {
             System.out.println("Testing with " + dataSize + " reviews:");
             System.out.println("----------------------------------------");
             
-            // Generate test data
-            List<ReviewRecord> testData = generateTestData(dataSize);
+            // Load REAL data subset
+            List<ReviewRecord> testData = BenchmarkUtils.getRealDataSubset(dataSize);
             LinearListReviewStore store = new LinearListReviewStore();
             
             // Benchmark insertion
@@ -240,7 +196,7 @@ public class LinearListPerformanceBenchmark {
         System.out.println("--------------------------------------------------------");
         
         for (int size : sizes) {
-            List<ReviewRecord> testData = generateTestData(size);
+            List<ReviewRecord> testData = BenchmarkUtils.getRealDataSubset(size);
             LinearListReviewStore store = new LinearListReviewStore();
             store.addReviews(testData);
             

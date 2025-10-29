@@ -17,22 +17,31 @@ import java.util.Map;
 
 /**
  * Unified benchmark runner that executes performance benchmarks across all three
- * data structure implementations and generates comparative analysis.
+ * data structure implementations using REAL CSV data from Skytrax dataset.
  * 
  * This class provides a comprehensive comparison of:
  * - Linear List (Experiment 1)
  * - AVL Tree (Experiment 2)
  * - RBT Tree (Experiment 3)
+ * 
+ * Uses REAL airline reviews from data/airline.csv (41,457 reviews)
  */
 public class UnifiedBenchmarkRunner {
     
     /**
-     * Run unified benchmarks for all three data structures.
+     * Run unified benchmarks for all three data structures using REAL CSV data.
      */
     public static void runUnifiedBenchmarks() {
         System.out.println("╔════════════════════════════════════════════════════════════════╗");
         System.out.println("║  Unified Benchmark Runner - All Data Structures              ║");
+        System.out.println("║  Using REAL CSV Data (41,457 Airline Reviews)                ║");
         System.out.println("╚════════════════════════════════════════════════════════════════╝");
+        System.out.println();
+        
+        // Load ALL real data once
+        System.out.println("📂 Loading REAL airline reviews from CSV...");
+        List<ReviewRecord> allRealData = BenchmarkUtils.loadRealData();
+        System.out.println("✅ Loaded " + allRealData.size() + " real reviews!");
         System.out.println();
         
         int[] dataSizes = BenchmarkUtils.getStandardDataSizes();
@@ -42,11 +51,13 @@ public class UnifiedBenchmarkRunner {
         
         for (int dataSize : dataSizes) {
             System.out.println("════════════════════════════════════════════════════════════════");
-            System.out.println("Testing with " + dataSize + " reviews");
+            System.out.println("Testing with " + dataSize + " REAL reviews");
             System.out.println("════════════════════════════════════════════════════════════════");
             
-            // Generate shared test data
-            List<ReviewRecord> testData = BenchmarkUtils.generateTestData(dataSize);
+            // Get subset of real data
+            List<ReviewRecord> testData = dataSize >= allRealData.size() 
+                ? allRealData 
+                : allRealData.subList(0, dataSize);
             
             // Run benchmarks for each data structure
             BenchmarkResults linearResults = benchmarkLinearList(testData, kValues);
@@ -241,10 +252,18 @@ public class UnifiedBenchmarkRunner {
                 grouped.get(prefix).add(data);
             }
             
-            // Write CSV for each structure
+            // Write CSV for each structure to results folder
+            writeCSV("results/experiment1_linear_list.csv", grouped.get("LinearList"));
+            writeCSV("results/experiment2_avl_tree.csv", grouped.get("AVLTree"));
+            writeCSV("results/experiment3_rbt.csv", grouped.get("RBT"));
+            
+            // Also write to old locations for backward compatibility
             writeCSV("src/main/java/com/reviews/experiments/experiment1/results.csv", grouped.get("LinearList"));
             writeCSV("src/main/java/com/reviews/experiments/experiment2/results.csv", grouped.get("AVLTree"));
             writeCSV("src/main/java/com/reviews/experiments/experiment3/results.csv", grouped.get("RBT"));
+            
+            // Write unified comparison file
+            writeUnifiedComparisonCSV("results/unified_comparison.csv", allResults);
             
         } catch (IOException e) {
             System.err.println("Error writing CSV files: " + e.getMessage());
@@ -255,6 +274,10 @@ public class UnifiedBenchmarkRunner {
      * Write CSV file for a specific data structure.
      */
     private static void writeCSV(String filename, List<BenchmarkData> results) throws IOException {
+        // Create parent directory if it doesn't exist
+        java.io.File file = new java.io.File(filename);
+        file.getParentFile().mkdirs();
+        
         FileWriter writer = new FileWriter(filename);
         
         // Write header
@@ -285,6 +308,55 @@ public class UnifiedBenchmarkRunner {
             }
             
             writer.append("\n");
+        }
+        
+        writer.flush();
+        writer.close();
+        
+        System.out.println("✓ Generated: " + filename);
+    }
+    
+    /**
+     * Write unified comparison CSV with all three data structures side-by-side.
+     */
+    private static void writeUnifiedComparisonCSV(String filename, List<BenchmarkData> allResults) throws IOException {
+        java.io.File file = new java.io.File(filename);
+        file.getParentFile().mkdirs();
+        
+        FileWriter writer = new FileWriter(filename);
+        
+        // Write header
+        writer.append("Data Size,Structure,Insertion Time (ms),Search Time (ms),RBAR Calculation (ms),");
+        writer.append("Top-5 (ms),Top-10 (ms),Top-25 (ms),Top-50 (ms),Tree Height,Is Balanced\n");
+        
+        // Write data rows sorted by data size, then by structure
+        java.util.Map<Integer, java.util.List<BenchmarkData>> groupedBySize = new java.util.LinkedHashMap<>();
+        
+        for (BenchmarkData data : allResults) {
+            groupedBySize.computeIfAbsent(data.dataSize, k -> new java.util.ArrayList<>()).add(data);
+        }
+        
+        for (java.util.Map.Entry<Integer, java.util.List<BenchmarkData>> entry : groupedBySize.entrySet()) {
+            for (BenchmarkData data : entry.getValue()) {
+                writer.append(String.valueOf(data.dataSize));
+                writer.append(",").append(data.structureName);
+                writer.append(",").append(String.format("%.3f", data.results.insertTime));
+                writer.append(",").append(String.format("%.3f", data.results.searchTime));
+                writer.append(",").append(String.format("%.3f", data.results.rbarTime));
+                writer.append(",").append(String.format("%.3f", data.results.topKTimes.get("Top-5")));
+                writer.append(",").append(String.format("%.3f", data.results.topKTimes.get("Top-10")));
+                writer.append(",").append(String.format("%.3f", data.results.topKTimes.get("Top-25")));
+                writer.append(",").append(String.format("%.3f", data.results.topKTimes.get("Top-50")));
+                
+                if (data.results.treeHeight > 0) {
+                    writer.append(",").append(String.valueOf(data.results.treeHeight));
+                    writer.append(",").append(String.valueOf(data.results.isBalanced));
+                } else {
+                    writer.append(",N/A,N/A");
+                }
+                
+                writer.append("\n");
+            }
         }
         
         writer.flush();

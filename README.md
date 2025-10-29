@@ -91,6 +91,14 @@ All implementations use the **same recency weighting algorithm**, allowing fair 
 
 ```
 CS201/
+├── results/                             # ⭐ MAIN RESULTS FOLDER
+│   ├── experiment1_linear_list.csv      # Linear List detailed results
+│   ├── experiment2_avl_tree.csv         # AVL Tree detailed results
+│   ├── experiment3_rbt.csv              # RBT detailed results
+│   ├── unified_comparison.csv           # Side-by-side comparison
+│   ├── ANALYSIS_REPORT.md               # Comprehensive analysis
+│   └── SUMMARY.txt                      # Quick reference summary
+│
 ├── src/main/java/com/reviews/
 │   ├── Models/                          # Data model classes
 │   │   ├── ReviewRecord.java           # Common interface for all review types
@@ -99,27 +107,32 @@ CS201/
 │   │   ├── AirportLoungeReview.java    # Airport lounge review implementation
 │   │   └── SeatReview.java             # Seat review implementation
 │   │
+│   ├── utils/                           # Utility classes
+│   │   └── CSVLoader.java              # Loads real CSV data
+│   │
 │   ├── experiments/                     # Experiment implementations
 │   │   ├── BenchmarkUtils.java         # Shared benchmark utilities
+│   │   ├── MasterRunner.java           # ⭐ ONE-CLICK runner (all experiments)
 │   │   ├── UnifiedBenchmarkRunner.java # Cross-experiment comparison
-│   │   ├── LinearListTest/             # Experiment 1: Linear List
-│   │   │   ├── Main.java              # Experiment 1 main runner
-│   │   │   ├── LinearListDemo.java    # Demonstration
+│   │   ├── ResultsAnalyzer.java        # Generates analysis reports
+│   │   ├── experiment1/                # Experiment 1: Linear List
+│   │   │   ├── Main1.java              # Experiment 1 main runner
+│   │   │   ├── LinearListDemo.java     # Demonstration
 │   │   │   ├── LinearListReviewStoreTest.java  # Test suite
 │   │   │   ├── LinearListPerformanceBenchmark.java  # Performance analysis
-│   │   │   └── results.csv            # Benchmark results
+│   │   │   └── results.csv             # Benchmark results (copy)
 │   │   ├── experiment2/                # Experiment 2: AVL Tree
-│   │   │   ├── Main2.java             # Experiment 2 main runner
-│   │   │   ├── AVLDemo.java           # Demonstration
+│   │   │   ├── Main2.java              # Experiment 2 main runner
+│   │   │   ├── AVLDemo.java            # Demonstration
 │   │   │   ├── AVLReviewStoreTest.java # Test suite
 │   │   │   ├── AVLPerformanceBenchmark.java # Performance analysis
-│   │   │   └── results.csv            # Benchmark results
+│   │   │   └── results.csv             # Benchmark results (copy)
 │   │   └── experiment3/                # Experiment 3: RBT
-│   │       ├── Main3.java             # Experiment 3 main runner
-│   │       ├── RBTDemo.java           # Demonstration
+│   │       ├── Main3.java              # Experiment 3 main runner
+│   │       ├── RBTDemo.java            # Demonstration
 │   │       ├── RBTReviewStoreTest.java # Test suite
 │   │       ├── RBTPerformanceBenchmark.java # Performance analysis
-│   │       └── results.csv            # Benchmark results
+│   │       └── results.csv             # Benchmark results (copy)
 │   │
 │   └── datastructures/                  # Data structure implementations
 │       ├── LinearListReviewStore.java  # Experiment 1 implementation
@@ -128,24 +141,67 @@ CS201/
 │       ├── RBTNode.java                # RBT tree node
 │       └── RBTReviewStore.java         # Experiment 3 implementation
 │
-├── data/                               # Dataset files
-│   ├── airline.csv                    # 41,457 airline reviews
-│   ├── airport.csv                    # 17,748 airport reviews  
-│   ├── lounge.csv                     # 2,277 lounge reviews
-│   └── seat.csv                       # 1,261 seat reviews
+├── data/                                # Dataset files (REAL DATA)
+│   ├── airline.csv                     # 41,457 airline reviews ⭐
+│   ├── airport.csv                     # 17,748 airport reviews  
+│   ├── lounge.csv                      # 2,277 lounge reviews
+│   └── seat.csv                        # 1,261 seat reviews
 │
-└── README.md                          # This file
+├── compile.sh                           # Compilation script
+├── run.sh                               # One-click run script
+├── .gitignore                           # Git ignore file
+└── README.md                            # This file
 ```
 
 ---
 
 ## 🚀 How to Run the Experiments
 
+### ⚡ ONE-CLICK SOLUTION (NEW!)
+
+**Easiest Way - Run Everything at Once:**
+
+1. **Using Shell Script (Mac/Linux):**
+   ```bash
+   ./run.sh
+   ```
+
+2. **Using IDE (IntelliJ/VS Code/Eclipse):**
+   - Open `MasterRunner.java`
+   - Click the **Run** button
+   - Done! ✅
+
+3. **Using Terminal:**
+   ```bash
+   cd src/main/java
+   javac com/reviews/experiments/MasterRunner.java
+   java com.reviews.experiments.MasterRunner
+   ```
+
+This will run all three experiments, generate all results, and display comparisons!
+
+---
+
+## 📊 Results System
+
+After running the project, check the **`results/`** folder for:
+
+- ⭐ **`SUMMARY.txt`** - Quick reference with key findings (view in terminal or editor)
+- ⭐ **`ANALYSIS_REPORT.md`** - Comprehensive analysis report with recommendations
+- ⭐ **`unified_comparison.csv`** - All experiments combined (ready for Excel/charts)
+- 📊 **`experiment1_linear_list.csv`** - Linear List detailed metrics
+- 📊 **`experiment2_avl_tree.csv`** - AVL Tree detailed metrics
+- 📊 **`experiment3_rbt.csv`** - RBT detailed metrics
+
+**👉 See [`RESULTS_GUIDE.md`](RESULTS_GUIDE.md) for detailed information about the results system!**
+
+---
+
 ### Prerequisites
 - Java 8 or higher
 - IDE with Java support (IntelliJ IDEA, Eclipse, VS Code)
 
-### Running Experiments
+### Running Experiments (Individual Control)
 
 #### Run All Experiments (Recommended)
 The unified benchmark runner compares all three data structures:
@@ -210,10 +266,20 @@ Each experiment directory contains:
 - **Tree balancing** ensures consistent performance regardless of insertion order in AVL
 - **Memory usage** is comparable across all implementations (O(N) space complexity)
 
+### 📊 Testing Approach
+
+**ALL benchmarks use REAL CSV data from Skytrax dataset!**
+
+- Uses actual airline reviews from `data/airline.csv` (41,457 reviews!)
+- Tests with real-world data distribution
+- Validates performance with authentic review patterns  
+- Test sizes: 1K, 5K, 10K, 25K, and full 41,457 reviews
+- No synthetic/generated data - 100% real user reviews!
+
 ---
 
 ## 🎯 Future Enhancements
-1. Real Dataset Integration: Load and process actual Skytrax CSV data
-2. Performance Visualization: Generate charts and graphs from benchmark results
-3. Memory Profiling: Measure actual memory usage differences
-4. Extended Testing: Add stress tests with larger datasets (100K+ reviews)
+1. Performance Visualization: Generate charts and graphs from benchmark results
+2. Memory Profiling: Measure actual memory usage differences  
+3. Extended Testing: Add stress tests with even larger datasets
+4. CSV Export: Export processed results in various formats

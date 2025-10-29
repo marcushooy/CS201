@@ -1,16 +1,13 @@
 package com.reviews.experiments;
 
-import com.reviews.Models.AirlineReview;
 import com.reviews.Models.ReviewRecord;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Shared utility class for benchmark operations across all experiments.
- * Provides common methods for test data generation and rating calculations.
+ * Provides methods for loading real CSV data and standard test configurations.
+ * 
+ * ALL data comes from real CSV files - NO synthetic/generated data!
  */
 public class BenchmarkUtils {
     
@@ -21,81 +18,25 @@ public class BenchmarkUtils {
         "Singapore Airlines", "Cathay Pacific", "Qantas", "Turkish Airlines", "ANA"
     };
     
-    private static final String[] COUNTRIES = {
-        "USA", "Canada", "Mexico", "UK", "Germany", "France", 
-        "Netherlands", "UAE", "Singapore", "Japan"
-    };
-    
-    private static final String[] AIRCRAFT_TYPES = {
-        "Boeing 737", "Airbus A320", "Boeing 777", "Airbus A350", "Boeing 787"
-    };
-    
-    private static final String[] CABIN_TYPES = {"Economy", "Business", "First"};
-    private static final String[] TRAVELER_TYPES = {"Business", "Leisure"};
-    
     /**
-     * Generate a large dataset of random airline reviews for performance testing.
-     * Uses fixed seed for reproducible results across experiments.
+     * Load real airline reviews from CSV file.
+     * This is the ONLY data source - no synthetic data!
      */
-    public static List<ReviewRecord> generateTestData(int numReviews) {
-        List<ReviewRecord> reviews = new ArrayList<>();
-        Random random = new Random(42); // Fixed seed for reproducible results
-        LocalDate now = LocalDate.now();
-        
-        for (int i = 0; i < numReviews; i++) {
-            String airline = AIRLINE_NAMES[random.nextInt(AIRLINE_NAMES.length)];
-            String country = COUNTRIES[random.nextInt(COUNTRIES.length)];
-            String aircraft = AIRCRAFT_TYPES[random.nextInt(AIRCRAFT_TYPES.length)];
-            String cabin = CABIN_TYPES[random.nextInt(CABIN_TYPES.length)];
-            String travelerType = TRAVELER_TYPES[random.nextInt(TRAVELER_TYPES.length)];
-            
-            // Generate dates with bias towards recent reviews (last 2 years)
-            LocalDate reviewDate;
-            if (random.nextDouble() < 0.7) {
-                // 70% chance of recent review (last 2 years)
-                int daysAgo = random.nextInt(730);
-                reviewDate = now.minusDays(daysAgo);
-            } else {
-                // 30% chance of older review (2-10 years)
-                int daysAgo = 730 + random.nextInt(2920);
-                reviewDate = now.minusDays(daysAgo);
-            }
-            
-            // Generate realistic ratings (bias towards higher ratings)
-            double overallRating = generateRealisticRating(random);
-            double seatComfortRating = generateRealisticRating(random);
-            double cabinStaffRating = generateRealisticRating(random);
-            double foodBeveragesRating = generateRealisticRating(random);
-            double inflightEntertainmentRating = generateRealisticRating(random);
-            double groundServiceRating = generateRealisticRating(random);
-            double wifiConnectivityRating = generateRealisticRating(random);
-            double valueMoneyRating = generateRealisticRating(random);
-            
-            int recommended = overallRating >= 4.0 ? 1 : 0;
-            
-            AirlineReview review = new AirlineReview(
-                airline, "link" + i, "Review " + i, "Author " + i, country,
-                reviewDate.toString(), "Review content for test " + i, aircraft,
-                travelerType, cabin, "Route " + i, overallRating, seatComfortRating,
-                cabinStaffRating, foodBeveragesRating, inflightEntertainmentRating,
-                groundServiceRating, wifiConnectivityRating, valueMoneyRating, recommended
-            );
-            
-            reviews.add(review);
-        }
-        
-        return reviews;
+    public static List<ReviewRecord> loadRealData() {
+        return com.reviews.utils.CSVLoader.loadAirlineReviews(
+            com.reviews.utils.CSVLoader.getAirlineCSVPath()
+        );
     }
     
     /**
-     * Generate realistic ratings with bias towards higher ratings.
-     * Uses normal distribution centered around 3.5 with std dev 1.0.
+     * Get a subset of real reviews for testing different data sizes.
      */
-    public static double generateRealisticRating(Random random) {
-        // Use normal distribution centered around 3.5 with std dev 1.0
-        double rating = random.nextGaussian() * 1.0 + 3.5;
-        // Clamp to valid range [1.0, 5.0]
-        return Math.max(1.0, Math.min(5.0, Math.round(rating * 10.0) / 10.0));
+    public static List<ReviewRecord> getRealDataSubset(int size) {
+        List<ReviewRecord> allData = loadRealData();
+        if (size >= allData.size()) {
+            return allData;
+        }
+        return allData.subList(0, size);
     }
     
     /**
@@ -106,10 +47,11 @@ public class BenchmarkUtils {
     }
     
     /**
-     * Get standard data sizes for benchmarking.
+     * Get standard data sizes for benchmarking with REAL CSV data.
+     * Tests with subsets of the full 41,457 airline reviews.
      */
     public static int[] getStandardDataSizes() {
-        return new int[]{1000, 5000, 10000, 25000, 50000};
+        return new int[]{1000, 5000, 10000, 25000, 41457}; // 41457 = ALL airline reviews
     }
     
     /**
@@ -119,4 +61,5 @@ public class BenchmarkUtils {
         return new int[]{5, 10, 25, 50};
     }
 }
+
 
