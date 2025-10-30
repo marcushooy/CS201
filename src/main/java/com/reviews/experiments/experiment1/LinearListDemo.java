@@ -3,6 +3,7 @@ package com.reviews.experiments.experiment1;
 import com.reviews.Models.AirlineReview;
 import com.reviews.Models.ReviewRecord;
 import com.reviews.datastructures.LinearListReviewStore;
+import com.reviews.utils.CSVLoader;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,9 +18,9 @@ public class LinearListDemo {
         System.out.println("=== LinearListReviewStore Baseline Demonstration ===");
         System.out.println();
         
-        // Create store and add sample data
+        // Create store and load REAL data
         LinearListReviewStore store = new LinearListReviewStore();
-        addSampleData(store);
+        addRealData(store, 10000); // use a cap for fast demo; set to -1 for full file
         
         // Demonstrate basic operations
         demonstrateBasicOperations(store);
@@ -36,47 +37,13 @@ public class LinearListDemo {
         test.runAllTests();
     }
     
-    private static void addSampleData(LinearListReviewStore store) {
-        System.out.println("Adding sample airline review data...");
-        
-        LocalDate now = LocalDate.now();
-        
-        // Add reviews for Delta with different dates
-        store.addReview(new AirlineReview("Delta", "link1", "Excellent recent flight", "John Doe", "USA", 
-                        now.minusDays(5).toString(), "Outstanding service and comfort", "Boeing 737", 
-                        "Business", "Economy", "LAX-JFK", 4.8, 4.5, 4.8, 4.2, 4.0, 4.5, 3.5, 4.8, 1));
-        
-        store.addReview(new AirlineReview("Delta", "link2", "Good experience", "Jane Smith", "USA", 
-                        now.minusDays(15).toString(), "Comfortable flight with good service", "Airbus A320", 
-                        "Leisure", "Economy", "SFO-LAX", 4.2, 4.0, 4.2, 3.8, 4.0, 3.8, 3.0, 4.2, 1));
-        
-        store.addReview(new AirlineReview("Delta", "link3", "Decent but old", "Bob Johnson", "USA", 
-                        now.minusDays(60).toString(), "Average experience from months ago", "Boeing 777", 
-                        "Business", "Business", "JFK-LHR", 3.5, 3.0, 3.5, 3.0, 3.5, 3.0, 2.0, 3.5, 0));
-        
-        store.addReview(new AirlineReview("Delta", "link4", "Very old review", "Charlie Wilson", "USA", 
-                        now.minusYears(4).toString(), "Very outdated experience", "Boeing 747", 
-                        "Business", "First", "ATL-CDG", 2.0, 1.5, 2.0, 1.5, 2.0, 1.5, 1.0, 2.0, 0));
-        
-        // Add reviews for United
-        store.addReview(new AirlineReview("United", "link5", "Recent United flight", "Alice Brown", "USA", 
-                        now.minusDays(10).toString(), "Good recent experience", "Boeing 787", 
-                        "Leisure", "Economy", "ORD-NRT", 4.0, 3.5, 4.0, 3.5, 4.0, 3.5, 2.5, 4.0, 1));
-        
-        store.addReview(new AirlineReview("United", "link6", "Old United review", "Diana Davis", "USA", 
-                        now.minusYears(5).toString(), "Very outdated experience", "Boeing 737", 
-                        "Leisure", "Economy", "DEN-LAX", 1.5, 1.0, 1.5, 1.0, 1.5, 1.0, 0.5, 1.5, 0));
-        
-        // Add reviews for American
-        store.addReview(new AirlineReview("American", "link7", "Recent American flight", "Eve Miller", "USA", 
-                        now.minusDays(8).toString(), "Good service recently", "Boeing 737", 
-                        "Business", "Economy", "DFW-LAX", 4.3, 4.0, 4.3, 3.8, 4.0, 3.8, 3.0, 4.3, 1));
-        
-        store.addReview(new AirlineReview("American", "link8", "Another recent flight", "Frank Garcia", "USA", 
-                        now.minusDays(20).toString(), "Satisfactory recent experience", "Airbus A321", 
-                        "Leisure", "Economy", "LAX-ORD", 3.9, 3.5, 3.9, 3.5, 3.9, 3.5, 2.8, 3.9, 1));
-        
-        System.out.println("✓ Added " + store.size() + " sample reviews");
+    private static void addRealData(LinearListReviewStore store, int limit) {
+        String path = CSVLoader.getAirlineCSVPath();
+        System.out.println("Loading REAL airline reviews from " + path + "...");
+        List<ReviewRecord> all = CSVLoader.loadAirlineReviews(path);
+        List<ReviewRecord> reviews = (limit > 0 && limit < all.size()) ? all.subList(0, limit) : all;
+        store.addReviews(reviews);
+        System.out.println("✓ Loaded " + reviews.size() + " reviews");
         System.out.println("✓ Airlines: " + store.getAllAirlines());
         System.out.println();
     }
