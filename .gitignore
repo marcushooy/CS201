@@ -28,3 +28,20 @@ experiments/results/*.csv
 *.tmp
 *.log
 
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+anaconda_projects/
+
