@@ -1,5 +1,7 @@
 package models;
 
+import java.util.Objects;
+
 /**
  * AirlineReview class to represent a single airline review from the CSV data.
  * This class encapsulates all the review information and provides methods
@@ -90,6 +92,27 @@ public class AirlineReview {
     public String toString() {
         return String.format("AirlineReview[%s, %s, Rating: %.1f]", 
                            airlineName, date, overallRating);
+    }
+    
+    /**
+     * Equals method for comparing reviews.
+     * Two reviews are considered equal if they have the same airline, date, author, and link.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        AirlineReview that = (AirlineReview) obj;
+        return Objects.equals(airlineName, that.airlineName) &&
+               Objects.equals(date, that.date) &&
+               Objects.equals(author, that.author) &&
+               Objects.equals(link, that.link);
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(airlineName, date, author, link);
     }
 }
 

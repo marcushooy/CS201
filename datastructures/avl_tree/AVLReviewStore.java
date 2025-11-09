@@ -1,6 +1,10 @@
+package datastructures.avl_tree;
+
+import models.AirlineReview;
+import models.AirlineRanking;
+import utils.RBARCalculator;
+import utils.RankingUtils;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -21,12 +25,10 @@ import java.util.*;
  */
 public class AVLReviewStore {
     private AVLNode root;
-    private DateTimeFormatter dateFormatter;
     private int totalReviews;
     
     public AVLReviewStore() {
         this.root = null;
-        this.dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         this.totalReviews = 0;
     }
     
@@ -316,11 +318,7 @@ public class AVLReviewStore {
     
     /**
      * Calculate Recency-Biased Average Rating (RBAR) for a specific airline.
-     * 
-     * Weighting scheme:
-     * - Recent reviews (last 30 days): weight = 1.0 (full weight)
-     * - Medium age reviews (30 days to 3 years): linear decay from 1.0 to 0.1
-     * - Old reviews (3+ years): weight = 0.05 (minimal weight)
+     * Uses the shared RBARCalculator utility for consistent calculation across all data structures.
      * 
      * Time Complexity: O(log N + M) where M is number of reviews for the airline
      */
@@ -330,52 +328,8 @@ public class AVLReviewStore {
             return 0.0;
         }
         
-        LocalDate now = LocalDate.now();
-        LocalDate thirtyDaysAgo = now.minusDays(30);
-        LocalDate threeYearsAgo = now.minusYears(3);
-        
-        double weightedSum = 0.0;
-        double totalWeight = 0.0;
-        
-        for (AirlineReview review : node.reviews) {
-            LocalDate reviewDate = parseDate(review.getDate());
-            double weight = calculateRecencyWeight(reviewDate, thirtyDaysAgo, threeYearsAgo);
-            
-            weightedSum += review.getOverallRating() * weight;
-            totalWeight += weight;
-        }
-        
-        return totalWeight > 0 ? weightedSum / totalWeight : 0.0;
-    }
-    
-    /**
-     * Calculate the weight for a review based on its recency.
-     */
-    private double calculateRecencyWeight(LocalDate reviewDate, LocalDate thirtyDaysAgo, LocalDate threeYearsAgo) {
-        if (reviewDate.isAfter(thirtyDaysAgo)) {
-            // Recent reviews (last 30 days): weight = 1.0
-            return 1.0;
-        } else if (reviewDate.isAfter(threeYearsAgo)) {
-            // Medium age reviews (30 days to 3 years): linear decay
-            long daysSinceThirtyDays = ChronoUnit.DAYS.between(thirtyDaysAgo, reviewDate);
-            long totalDays = ChronoUnit.DAYS.between(threeYearsAgo, thirtyDaysAgo);
-            return Math.max(0.1, 1.0 - (double) daysSinceThirtyDays / totalDays);
-        } else {
-            // Old reviews (3+ years): minimal weight
-            return 0.05;
-        }
-    }
-    
-    /**
-     * Parse date string to LocalDate.
-     */
-    private LocalDate parseDate(String dateStr) {
-        try {
-            return LocalDate.parse(dateStr, dateFormatter);
-        } catch (Exception e) {
-            // If parsing fails, return a very old date to minimize its weight
-            return LocalDate.of(1900, 1, 1);
-        }
+        // Use shared RBAR calculation utility
+        return RBARCalculator.calculateRBAR(node.reviews);
     }
     
     // ==================== AIRLINE RANKINGS ====================
@@ -383,51 +337,30 @@ public class AVLReviewStore {
     /**
      * Get airlines ranked by their RBAR (Recency-Biased Average Rating).
      * Returns a list of airline names sorted by RBAR in descending order.
+     * Uses shared RankingUtils to avoid code duplication.
      * 
      * Time Complexity: O(N log N) where N is number of airlines
      */
     public List<AirlineRanking> getAirlineRankings() {
-        List<AirlineRanking> rankings = new ArrayList<>();
-        
+        // Build map of airline -> reviews for the utility method
+        Map<String, List<AirlineReview>> airlineReviewsMap = new HashMap<>();
         for (String airline : getAllAirlines()) {
-            double rbar = calculateRBAR(airline);
-            int reviewCount = getReviewsByAirline(airline).size();
-            rankings.add(new AirlineRanking(airline, rbar, reviewCount));
+            airlineReviewsMap.put(airline, getReviewsByAirline(airline));
         }
         
-        // Sort by RBAR in descending order
-        rankings.sort((a, b) -> Double.compare(b.rbar, a.rbar));
-        
-        return rankings;
+        // Use shared ranking utility
+        return RankingUtils.calculateRankings(airlineReviewsMap);
     }
     
     /**
      * Get top k airlines ranked by RBAR.
+     * Uses shared RankingUtils to avoid code duplication.
+     * 
      * Time Complexity: O(N log N) where N is number of airlines
      */
     public List<AirlineRanking> getTopKAirlines(int k) {
         List<AirlineRanking> rankings = getAirlineRankings();
-        return rankings.subList(0, Math.min(k, rankings.size()));
-    }
-    
-    /**
-     * Inner class to represent airline ranking.
-     */
-    public static class AirlineRanking {
-        public String airlineName;
-        public double rbar;
-        public int reviewCount;
-        
-        public AirlineRanking(String airlineName, double rbar, int reviewCount) {
-            this.airlineName = airlineName;
-            this.rbar = rbar;
-            this.reviewCount = reviewCount;
-        }
-        
-        @Override
-        public String toString() {
-            return String.format("%s: RBAR=%.3f (%d reviews)", airlineName, rbar, reviewCount);
-        }
+        return RankingUtils.getTopK(rankings, k);
     }
     
     // ==================== UTILITY METHODS ====================
