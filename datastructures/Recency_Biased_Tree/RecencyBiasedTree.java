@@ -10,8 +10,8 @@ import java.util.List;
  * RecencyBiasedTree<T>
  *
  * Implemented as a splay tree:
- *  - Recently inserted/accessed nodes are moved near the root.
- *  - Good for workloads where recent items are accessed frequently.
+ *  - Tree is ordered by review date (most recent at root)
+ *  - On insert or access, most recent is splayed to root
  */
 public class RecencyBiasedTree<T> {
 
@@ -49,6 +49,7 @@ public class RecencyBiasedTree<T> {
         Node parent = null;
         int cmp = 0;
 
+        // standard BST insertion
         while (curr != null) {
             parent = curr;
             cmp = comparator.compare(value, curr.value);
@@ -66,8 +67,8 @@ public class RecencyBiasedTree<T> {
             parent.right = newNode;
         }
 
-        // Splay the inserted node to the root (recency bias)
-        splay(newNode);
+        // Ssplay global most recent (max) to root
+        splayMax();
     }
 
     public List<T> inOrderTraversal() {
@@ -113,6 +114,19 @@ public class RecencyBiasedTree<T> {
     }
 
     // ------------- Internal helpers -------------
+
+    // find max element and splay it to root
+    // newest review becomes root
+    private void splayMax() {
+        if (root == null) return;
+
+        Node curr = root;
+        while (curr.right != null) {
+            curr = curr.right;
+        }
+        // curr is the maximum element
+        splay(curr);
+    }
 
     private void splay(Node x) {
         if (x == null) return;
