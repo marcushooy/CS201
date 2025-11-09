@@ -210,6 +210,28 @@ public class AVLTreeBenchmark extends PerformanceBenchmark {
     }
     
     /**
+     * Benchmark getTopKRecentReviews operation.
+     */
+    public static BenchmarkResult benchmarkTopKRecent(AVLReviewStore store, int dataSize, int k, int iterations) {
+        System.out.println("\n[AVL Tree] Benchmarking TOPK_RECENT (k=" + k + ")...");
+        
+        Set<String> airlines = store.getAllAirlines();
+        if (airlines.isEmpty()) return null;
+        
+        // Warmup
+        warmup(() -> {
+            String airline = getRandomAirline(airlines);
+            if (airline != null) store.getTopKRecentReviews(airline, k);
+        }, 50);
+        
+        // Benchmark
+        return runBenchmark(DATA_STRUCTURE_NAME, "TOPK_RECENT", dataSize, iterations, () -> {
+            String airline = getRandomAirline(airlines);
+            if (airline != null) store.getTopKRecentReviews(airline, k);
+        });
+    }
+    
+    /**
      * Run all benchmarks for a specific data size.
      */
     public static List<BenchmarkResult> runAllBenchmarks(int dataSize) {
@@ -254,6 +276,9 @@ public class AVLTreeBenchmark extends PerformanceBenchmark {
         if (result != null) results.add(result);
         
         result = benchmarkTopK(store, dataSize, 10, 100);
+        if (result != null) results.add(result);
+        
+        result = benchmarkTopKRecent(store, dataSize, 10, 100);
         if (result != null) results.add(result);
         
         System.out.println("\nAVL Tree benchmarks complete for " + dataSize + " reviews.");

@@ -194,6 +194,24 @@ public class AVLTest {
                          (int) Math.ceil(Math.log(store.getAllAirlines().size()) / Math.log(2)));
         System.out.println();
         
+        // ==================== TEST 8: Top-K Recent ====================
+        System.out.println("════════════════════════════════════════════════════════════════");
+        System.out.println("TEST 8: Top-K Recent Reviews");
+        System.out.println("════════════════════════════════════════════════════════════════");
+        
+        if (!airlines.isEmpty()) {
+            String testAirline = airlines.iterator().next();
+            List<AirlineReview> top5 = store.getTopKRecentReviews(testAirline, 5);
+            
+            System.out.println("✓ Airline: " + testAirline);
+            System.out.println("✓ Top 5 most recent reviews:");
+            for (int i = 0; i < top5.size(); i++) {
+                System.out.println("  " + (i+1) + ". " + top5.get(i).getDate() + 
+                                 " - Rating: " + top5.get(i).getOverallRating());
+            }
+        }
+        System.out.println();
+        
         // ==================== SUMMARY ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("✅ ALL TESTS COMPLETED SUCCESSFULLY!");
@@ -207,6 +225,7 @@ public class AVLTest {
         System.out.println("  ✓ RBAR: calculateRBAR()");
         System.out.println("  ✓ RANKINGS: getAirlineRankings(), getTopKAirlines()");
         System.out.println("  ✓ TREE PROPERTIES: getTreeHeight(), isBalanced()");
+        System.out.println("  ✓ TOP-K RECENT: getTopKRecentReviews()");
     }
 }
 

@@ -204,6 +204,31 @@ public class LinearListReviewStore {
         return RankingUtils.getTopK(rankings, k);
     }
     
+    /**
+     * Get the top K most recent reviews for an airline.
+     * Time Complexity: O(N) where N is total number of reviews
+     * 
+     * @param airline The airline name
+     * @param k Number of recent reviews to return
+     * @return List of k most recent reviews, sorted by date (newest first)
+     */
+    public List<AirlineReview> getTopKRecentReviews(String airline, int k) {
+        if (airline == null || k <= 0) {
+            return new ArrayList<>();
+        }
+        
+        List<AirlineReview> airlineReviews = getReviewsByAirline(airline);
+        if (airlineReviews.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        // Sort by date in descending order (newest first)
+        airlineReviews.sort((a, b) -> b.getDate().compareTo(a.getDate()));
+        
+        // Return top k
+        return airlineReviews.subList(0, Math.min(k, airlineReviews.size()));
+    }
+    
     // ==================== UTILITY METHODS ====================
     
     /**

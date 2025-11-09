@@ -193,6 +193,24 @@ public class LinearListTest {
         }
         System.out.println();
         
+        // ==================== TEST 7: Top-K Recent ====================
+        System.out.println("════════════════════════════════════════════════════════════════");
+        System.out.println("TEST 7: Top-K Recent Reviews");
+        System.out.println("════════════════════════════════════════════════════════════════");
+        
+        if (!airlines.isEmpty()) {
+            String testAirline = airlines.iterator().next();
+            List<AirlineReview> top5 = store.getTopKRecentReviews(testAirline, 5);
+            
+            System.out.println("✓ Airline: " + testAirline);
+            System.out.println("✓ Top 5 most recent reviews:");
+            for (int i = 0; i < top5.size(); i++) {
+                System.out.println("  " + (i+1) + ". " + top5.get(i).getDate() + 
+                                 " - Rating: " + top5.get(i).getOverallRating());
+            }
+        }
+        System.out.println();
+        
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("✅ ALL TESTS COMPLETED SUCCESSFULLY!");
         System.out.println("════════════════════════════════════════════════════════════════");
@@ -205,6 +223,7 @@ public class LinearListTest {
         System.out.println("  ✓ DELETE: deleteReview()");
         System.out.println("  ✓ RBAR: calculateRBAR()");
         System.out.println("  ✓ RANKINGS: getAirlineRankings(), getTopKAirlines()");
+        System.out.println("  ✓ TOP-K RECENT: getTopKRecentReviews()");
     }
 }
 
