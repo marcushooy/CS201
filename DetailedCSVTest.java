@@ -1,114 +1,123 @@
-package utils;
-
 import models.AirlineReview;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * CSVLoader - Utility class to load airline reviews from CSV file.
+ * Detailed test to capture and analyze CSV parsing errors
  */
-public class CSVLoader {
+public class DetailedCSVTest {
     
-    /**
-     * Load airline reviews from the CSV file.
-     * Each review is assigned a unique random ID that remains constant regardless of position.
-     * 
-     * @param csvPath Path to the airline.csv file
-     * @return List of AirlineReview objects
-     */
-    public static List<AirlineReview> loadAirlineReviews(String csvPath) {
+    public static void main(String[] args) {
+        System.out.println("Detailed CSV Parsing Analysis");
+        System.out.println("=".repeat(70));
+        
+        String csvPath = "data/airline.csv";
         List<AirlineReview> reviews = new ArrayList<>();
+        List<String> errorMessages = new ArrayList<>();
+        int successCount = 0;
+        int failCount = 0;
         
         try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
-            // Skip header line
+            // Skip header
             String header = readCompleteCSVRecord(br);
-            if (header == null) {
-                System.err.println("CSV file is empty or missing header");
-                return reviews;
-            }
             
             String record;
             int recordNumber = 0;
             while ((record = readCompleteCSVRecord(br)) != null) {
                 recordNumber++;
+                
+                // Capture stderr to catch error messages
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                PrintStream ps = new PrintStream(baos);
+                PrintStream oldErr = System.err;
+                System.setErr(ps);
+                
                 try {
-                    // Generate unique random ID for each review
                     String reviewId = "REV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
                     AirlineReview review = parseCSVLine(record, reviewId);
                     if (review != null) {
                         reviews.add(review);
+                        successCount++;
+                    } else {
+                        failCount++;
+                        String error = baos.toString().trim();
+                        if (!error.isEmpty()) {
+                            errorMessages.add("Record " + recordNumber + ": " + error);
+                        }
                     }
                 } catch (Exception e) {
-                    System.err.println("Error parsing record " + recordNumber + ": " + e.getMessage());
-                    // Continue processing other records
+                    failCount++;
+                    errorMessages.add("Record " + recordNumber + ": Exception - " + e.getMessage());
+                } finally {
+                    System.setErr(oldErr);
                 }
             }
         } catch (IOException e) {
             System.err.println("Error reading CSV file: " + e.getMessage());
-            e.printStackTrace();
         }
         
-        return reviews;
+        System.out.println("\nRESULTS:");
+        System.out.println("  Successfully loaded: " + successCount);
+        System.out.println("  Failed/Skipped: " + failCount);
+        System.out.println("  Success rate: " + String.format("%.2f%%", (successCount * 100.0 / (successCount + failCount))));
+        
+        if (!errorMessages.isEmpty()) {
+            System.out.println("\n" + "=".repeat(70));
+            System.out.println("ERROR DETAILS (showing first 20):");
+            System.out.println("=".repeat(70));
+            int shown = 0;
+            for (String error : errorMessages) {
+                System.out.println(error);
+                shown++;
+                if (shown >= 20) {
+                    if (errorMessages.size() > 20) {
+                        System.out.println("... and " + (errorMessages.size() - 20) + " more errors");
+                    }
+                    break;
+                }
+            }
+        }
     }
     
-    /**
-     * Read a complete CSV record, handling multi-line quoted fields.
-     * Continues reading lines until all opened quotes are closed.
-     * 
-     * @param br BufferedReader to read from
-     * @return Complete CSV record as a single string, or null if end of file
-     * @throws IOException if reading fails
-     */
+    // Copy of readCompleteCSVRecord from CSVLoader
     private static String readCompleteCSVRecord(BufferedReader br) throws IOException {
         StringBuilder record = new StringBuilder();
         String line;
         boolean inQuotes = false;
         
         while ((line = br.readLine()) != null) {
-            // Append line to record
             if (record.length() > 0) {
-                record.append('\n'); // Preserve the newline that was in the original field
+                record.append('\n');
             }
             record.append(line);
             
-            // Count unescaped quotes to track quote state
             for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
                 if (c == '"') {
-                    // Check if this is an escaped quote ("")
                     if (i < line.length() - 1 && line.charAt(i + 1) == '"') {
-                        i++; // Skip escaped quote
+                        i++;
                     } else {
-                        inQuotes = !inQuotes; // Toggle quote state
+                        inQuotes = !inQuotes;
                     }
                 }
             }
             
-            // If we're not in quotes, this record is complete
             if (!inQuotes) {
                 return record.toString();
             }
-            // Otherwise, continue reading the next line
         }
         
-        // End of file - return whatever we have
         return record.length() > 0 ? record.toString() : null;
     }
     
-    /**
-     * Parse a single CSV line into an AirlineReview object.
-     * CSV format: "airline_name","link","title","author","author_country","date","content","aircraft","type_traveller","cabin_flown","route","overall_rating","seat_comfort_rating","cabin_staff_rating","food_beverages_rating","inflight_entertainment_rating","ground_service_rating","wifi_connectivity_rating","value_money_rating","recommended"
-     * 
-     * @param line The CSV line to parse
-     * @param reviewId Unique identifier for this review
-     * @return AirlineReview object or null if parsing fails
-     */
+    // Copy of parseCSVLine from CSVLoader
     private static AirlineReview parseCSVLine(String line, String reviewId) {
-        // Parse CSV line with quoted fields
         List<String> fields = parseCSVFields(line);
         
         if (fields.size() < 20) {
@@ -129,7 +138,6 @@ public class CSVLoader {
             String cabinFlown = fields.get(9);
             String route = fields.get(10);
             
-            // Parse ratings (handle empty strings)
             double overallRating = parseDouble(fields.get(11), 0.0);
             double seatComfortRating = parseDouble(fields.get(12), 0.0);
             double cabinStaffRating = parseDouble(fields.get(13), 0.0);
@@ -154,9 +162,7 @@ public class CSVLoader {
         }
     }
     
-    /**
-     * Parse CSV fields handling quoted strings and escaped quotes ("").
-     */
+    // Copy of parseCSVFields from CSVLoader
     private static List<String> parseCSVFields(String line) {
         List<String> fields = new ArrayList<>();
         boolean inQuotes = false;
@@ -166,13 +172,10 @@ public class CSVLoader {
             char c = line.charAt(i);
             
             if (c == '"') {
-                // Check if this is an escaped quote ("")
                 if (i < line.length() - 1 && line.charAt(i + 1) == '"') {
-                    // This is an escaped quote - add one quote to field and skip next
                     currentField.append('"');
-                    i++; // Skip the next quote
+                    i++;
                 } else {
-                    // This is a field delimiter quote - toggle inQuotes state
                     inQuotes = !inQuotes;
                 }
             } else if (c == ',' && !inQuotes) {
@@ -182,7 +185,6 @@ public class CSVLoader {
                 currentField.append(c);
             }
         }
-        // Add last field
         fields.add(currentField.toString().trim());
         
         return fields;
@@ -210,3 +212,4 @@ public class CSVLoader {
         }
     }
 }
+
