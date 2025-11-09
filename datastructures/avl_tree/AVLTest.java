@@ -13,7 +13,7 @@ public class AVLTest {
     
     public static void main(String[] args) {
         System.out.println("╔════════════════════════════════════════════════════════════════╗");
-        System.out.println("║          AVL Tree Data Structure - Comprehensive Test        ║");
+        System.out.println("║          AVL Tree Data Structure - Comprehensive Test          ║");
         System.out.println("╚════════════════════════════════════════════════════════════════╝");
         System.out.println();
         

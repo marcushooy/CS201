@@ -14,7 +14,7 @@ public class RBTTest {
     
     public static void main(String[] args) {
         System.out.println("╔════════════════════════════════════════════════════════════════╗");
-        System.out.println("║       RBT Tree Data Structure - Comprehensive Test              ║");
+        System.out.println("║       RBT Tree Data Structure - Comprehensive Test             ║");
         System.out.println("╚════════════════════════════════════════════════════════════════╝");
         System.out.println();
         
