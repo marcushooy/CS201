@@ -37,7 +37,7 @@ public class RecencyBiasedTree<T> {
         this.comparator = comparator;
     }
 
-    // ------------- Public API -------------
+    // =============== Public API ================
 
     public void insert(T value) {
         if (root == null) {
@@ -113,7 +113,7 @@ public class RecencyBiasedTree<T> {
         return result;
     }
 
-    // ------------- Internal helpers -------------
+    // =============== Internal helpers ================
 
     // find max element and splay it to root
     // newest review becomes root
