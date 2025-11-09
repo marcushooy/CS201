@@ -82,7 +82,7 @@ This project analyzes the performance characteristics of three different data st
   - SEARCH: O(N) worst case, O(log N) amortized
   - UPDATE: O(N) (rebuilds tree)
   - DELETE: O(N) (rebuilds tree)
-  - **TOPK_RECENT: O(k)** ⭐ Optimized for recent review access
+  - **TOPK_RECENT: O(k)** - Optimized for recent review access
 - **Special Features**: 
   - Temporal Recency: Most recent review by date always at root after insert
   - Efficient `getTopKRecentReviews()` operation
@@ -96,7 +96,7 @@ This project analyzes the performance characteristics of three different data st
 5. **RBAR** - `calculateRBAR()` - Calculate Recency-Biased Average Rating
 6. **RANKINGS** - `getAirlineRankings()` - Get all airlines ranked by RBAR
 7. **TOPK** - `getTopKAirlines(k)` - Get top k airlines by RBAR
-8. **TOPK_RECENT** - `getTopKRecentReviews()` - Get k most recent reviews for an airline ⭐ Available in all data structures
+8. **TOPK_RECENT** - `getTopKRecentReviews()` - Get k most recent reviews for an airline - Available in all data structures
 
 ## Test Configuration
 
@@ -238,9 +238,9 @@ COMPARISON FOR 1000 REVIEWS
 ────────────────────────────────────────────────────────────────────────────────
 Operation    | Linear List     | AVL Tree        | RBT             | Winner      
 ────────────────────────────────────────────────────────────────────────────────
-CREATE       |     0.000029 ms |     0.000063 ms |     0.000795 ms | Linear List ⭐
-READ         |        0.021 ms |     0.000818 ms |        0.001 ms | AVL Tree ⭐  
-TOPK_RECENT  |        0.050 ms |        0.010 ms |        0.001 ms | RBT ⭐       
+CREATE       |     0.000029 ms |     0.000063 ms |     0.000795 ms | Linear List 
+READ         |        0.021 ms |     0.000818 ms |        0.001 ms | AVL Tree   
+TOPK_RECENT  |        0.050 ms |        0.010 ms |        0.001 ms | RBT        
 ...
 ```
 
@@ -293,7 +293,7 @@ TOPK_RECENT  |        0.050 ms |        0.010 ms |        0.001 ms | RBT ⭐
 | RBAR | O(N) | O(M) where M = reviews for airline | O(M) |
 | RANKINGS | O(N log N) | O(N log N) | O(N log N) |
 | TOPK | O(N log N) | O(N log N) | O(N log N) |
-| **TOPK_RECENT** | **O(N + M log M)** | **O(log N + M log M)** | **O(k)** ⭐ |
+| **TOPK_RECENT** | **O(N + M log M)** | **O(log N + M log M)** | **O(k)**  |
 
 ### Expected Winners by Operation
 - **CREATE**: Linear List (O(1) insertion)
@@ -303,7 +303,7 @@ TOPK_RECENT  |        0.050 ms |        0.010 ms |        0.001 ms | RBT ⭐
 - **RBAR**: Similar across all (depends on review count per airline)
 - **RANKINGS**: Similar across all (O(N log N) sorting dominates)
 - **TOPK**: Similar across all (subset of RANKINGS)
-- **TOPK_RECENT**: **RBT** ⭐ (O(k) due to temporal recency optimization)
+- **TOPK_RECENT**: **RBT**  (O(k) due to temporal recency optimization)
 
 ### Key Insights
 1. **Linear List**: Best for simple insertion, poor for search
