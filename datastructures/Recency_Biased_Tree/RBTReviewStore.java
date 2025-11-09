@@ -196,20 +196,6 @@ public class RBTReviewStore {
     public double calculateRecencyBiasedAverageRating(String airline, @SuppressWarnings("unused") java.time.LocalDate now) {
         return calculateRBAR(airline);
     }
-
-    /**
-     * Get the top K most recent reviews for an airline.
-     * Uses the recency-biased tree's reverse in-order traversal.
-     * Time Complexity: O(k) - recent reviews are near root
-     */
-    public List<AirlineReview> getTopKRecentReviews(String airline, int k) {
-        if (airline == null || k <= 0) return Collections.emptyList();
-        RecencyBiasedTree<AirlineReview> tree = airlineTrees.get(airline);
-        if (tree == null) return Collections.emptyList();
-
-        // Newest → older
-        return tree.reverseInOrderTakeK(k);
-    }
     
     // ==================== AIRLINE RANKINGS ====================
     
@@ -240,6 +226,20 @@ public class RBTReviewStore {
     public List<AirlineRanking> getTopKAirlines(int k) {
         List<AirlineRanking> rankings = getAirlineRankings();
         return RankingUtils.getTopK(rankings, k);
+    }
+
+    /**
+     * Get the top K most recent reviews for an airline.
+     * Uses the recency-biased tree's reverse in-order traversal.
+     * Time Complexity: O(k) - recent reviews are near root
+     */
+    public List<AirlineReview> getTopKRecentReviews(String airline, int k) {
+        if (airline == null || k <= 0) return Collections.emptyList();
+        RecencyBiasedTree<AirlineReview> tree = airlineTrees.get(airline);
+        if (tree == null) return Collections.emptyList();
+
+        // Newest → older
+        return tree.reverseInOrderTakeK(k);
     }
     
     // ==================== UTILITY METHODS ====================
