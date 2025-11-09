@@ -250,7 +250,7 @@ TOPK_RECENT  |        0.050 ms |        0.010 ms |        0.001 ms | RBT
 - `Linear_List/LinearListReviewStore.java` - ArrayList-based implementation
 - `AVL_Tree/AVLNode.java` - AVL tree node with balance tracking
 - `AVL_Tree/AVLReviewStore.java` - AVL tree implementation
-- `Recency_Biased_Tree/RecencyBiasedTree.java` - Generic splay tree with temporal recency
+- `Recency_Biased_Tree/RecencyBiasedTree.java` - Splay tree with temporal recency
 - `Recency_Biased_Tree/RBTReviewStore.java` - Recency-biased tree for airline reviews
 
 ### Models (`models/`)
