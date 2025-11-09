@@ -1,7 +1,7 @@
 import models.AirlineReview;
 import models.AirlineRanking;
 import utils.CSVLoader;
-import datastructures.linear_list.LinearListReviewStore;
+import datastructures.Linear_List.LinearListReviewStore;
 import java.util.List;
 import java.util.Set;
 

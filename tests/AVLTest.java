@@ -1,7 +1,7 @@
 import models.AirlineReview;
 import models.AirlineRanking;
 import utils.CSVLoader;
-import datastructures.avl_tree.AVLReviewStore;
+import datastructures.AVL_Tree.AVLReviewStore;
 import java.util.List;
 import java.util.Set;
 

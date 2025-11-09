@@ -1,7 +1,7 @@
 import models.AirlineReview;
 import models.AirlineRanking;
 import utils.CSVLoader;
-import datastructures.rbt_tree.RBTReviewStore;
+import datastructures.Recency_Biased_Tree.RBTReviewStore;
 import java.util.List;
 import java.util.Set;
 

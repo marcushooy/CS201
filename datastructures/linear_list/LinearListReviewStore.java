@@ -1,4 +1,4 @@
-package datastructures.linear_list;
+package datastructures.Linear_List;
 
 import models.AirlineReview;
 import models.AirlineRanking;

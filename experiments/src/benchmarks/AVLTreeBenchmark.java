@@ -1,6 +1,6 @@
 package experiments.benchmarks;
 
-import datastructures.avl_tree.AVLReviewStore;
+import datastructures.AVL_Tree.AVLReviewStore;
 import models.AirlineReview;
 import experiments.utils.*;
 import java.util.ArrayList;

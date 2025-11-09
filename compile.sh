@@ -26,9 +26,9 @@ fi
 
 echo ""
 echo "Step 3: Compiling data structures..."
-javac -d out -cp out datastructures/linear_list/*.java
-javac -d out -cp out datastructures/avl_tree/*.java
-javac -d out -cp out datastructures/rbt_tree/*.java
+javac -d out -cp out datastructures/Linear_List/*.java
+javac -d out -cp out datastructures/AVL_Tree/*.java
+javac -d out -cp out datastructures/Recency_Biased_Tree/*.java
 if [ $? -eq 0 ]; then
     echo "✓ Data structures compiled successfully"
 else

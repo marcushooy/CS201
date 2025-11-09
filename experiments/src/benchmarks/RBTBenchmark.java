@@ -1,6 +1,6 @@
 package experiments.benchmarks;
 
-import datastructures.rbt_tree.RBTReviewStore;
+import datastructures.Recency_Biased_Tree.RBTReviewStore;
 import models.AirlineReview;
 import experiments.utils.*;
 import java.util.ArrayList;

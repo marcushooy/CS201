@@ -1,6 +1,6 @@
 package experiments.benchmarks;
 
-import datastructures.linear_list.LinearListReviewStore;
+import datastructures.Linear_List.LinearListReviewStore;
 import models.AirlineReview;
 import experiments.utils.*;
 import java.util.ArrayList;

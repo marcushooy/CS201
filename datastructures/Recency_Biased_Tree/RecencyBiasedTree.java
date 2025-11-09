@@ -1,4 +1,4 @@
-package datastructures.rbt_tree;
+package datastructures.Recency_Biased_Tree;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;

@@ -12,7 +12,7 @@ cd "$(dirname "$0")/.."
 
 # Compile all files (models, utils, datastructures, and test files)
 echo "🔨 Compiling..."
-javac -d tests/out models/*.java utils/*.java datastructures/linear_list/*.java datastructures/avl_tree/*.java datastructures/rbt_tree/*.java tests/*.java
+javac -d tests/out models/*.java utils/*.java datastructures/Linear_List/*.java datastructures/AVL_Tree/*.java datastructures/Recency_Biased_Tree/*.java tests/*.java
 
 if [ $? -ne 0 ]; then
     echo "❌ Compilation failed!"
