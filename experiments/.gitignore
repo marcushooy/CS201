@@ -1,0 +1,10 @@
+# Compiled class files
+classes/
+
+# Benchmark results
+results/*.csv
+
+# Keep directory structure
+!results/.gitkeep
+!classes/.gitkeep
+
