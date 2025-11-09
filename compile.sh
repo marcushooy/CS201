@@ -5,9 +5,6 @@ echo "  Compiling Performance Experiments"
 echo "================================================"
 echo ""
 
-# Navigate to project root
-cd ..
-
 echo "Step 1: Compiling models..."
 javac models/*.java
 if [ $? -eq 0 ]; then
@@ -74,19 +71,6 @@ echo "================================================"
 echo "  Compilation Complete!"
 echo "================================================"
 echo ""
-echo "Directory structure:"
-echo "  experiments/"
-echo "    ├── src/"
-echo "    │   ├── benchmarks/     (benchmark implementations)"
-echo "    │   ├── utils/          (shared utilities)"
-echo "    │   └── UnifiedBenchmarkRunner.java"
-echo "    ├── classes/            (compiled .class files)"
-echo "    ├── results/            (benchmark results - will be created on run)"
-echo "    ├── compile.sh"
-echo "    ├── run.sh"
-echo "    └── README.md"
-echo ""
 echo "To run the benchmarks:"
-echo "  cd experiments"
 echo "  ./run.sh"
 echo ""

@@ -1,181 +1,218 @@
-# CS201 Project - Data Structures for Airline Reviews
+# Performance Experiments
 
-This project implements and compares three data structures (Linear List, AVL Tree, RBT Tree) for storing and managing airline reviews with RBAR (Recency-Biased Average Rating) calculations.
+This directory contains comprehensive performance benchmarking code for comparing three data structures: **Linear List**, **AVL Tree**, and **RBT (Recency-Biased Tree)**.
 
-## 📋 Prerequisites
+## Directory Structure
 
-- **Java JDK 8 or higher** (check with `java -version`)
-- **Git** (to clone the repository)
+```
+experiments/
+├── src/                          # Source code
+│   ├── benchmarks/               # Benchmark implementations
+│   │   ├── LinearListBenchmark.java
+│   │   ├── AVLTreeBenchmark.java
+│   │   └── RBTBenchmark.java
+│   ├── utils/                    # Shared utilities
+│   │   ├── BenchmarkResult.java
+│   │   ├── PerformanceBenchmark.java
+│   │   └── ResultsWriter.java
+│   └── UnifiedBenchmarkRunner.java  # Main runner
+├── classes/                      # Compiled .class files
+├── results/                      # Benchmark output (CSV files)
+├── compile.sh                    # Compilation script
+├── run.sh                        # Execution script
+└── README.md                     # This file
+```
 
-## 🚀 Quick Start - Run All Tests
+## Overview
 
-### Step 1: Clone the Repository
+The experiments measure **runtime performance** for all key operations using **real airline review data** from CSV. Results are saved to the `results/` subdirectory for analysis.
+
+## Operations Benchmarked
+
+1. **CREATE** - `addReview()` - Insert a single review
+2. **READ** - `getReviewsByAirline()` - Search reviews by airline name
+3. **UPDATE** - `updateReview()` - Update an existing review
+4. **DELETE** - `deleteReview()` - Remove a review
+5. **RBAR** - `calculateRBAR()` - Calculate Recency-Biased Average Rating
+6. **RANKINGS** - `getAirlineRankings()` - Get all airlines ranked by RBAR
+7. **TOPK** - `getTopKAirlines(k)` - Get top k airlines
+8. **TOPK_RECENT** - `getTopKRecentReviews()` - Get k most recent reviews (RBT only)
+
+## Test Configuration
+
+### Data Sizes
+- 1,000 reviews (small)
+- 5,000 reviews (medium-small)
+- 10,000 reviews (medium)
+- 25,000 reviews (large)
+- 41,000+ reviews (full dataset)
+
+### Iteration Counts
+- CREATE: 1000 iterations
+- READ: 100 iterations
+- UPDATE: 100 iterations
+- DELETE: 100 iterations
+- RBAR: 50 iterations
+- RANKINGS: 20 iterations
+- TOPK: 100 iterations
+
+### Metrics Collected
+- **Average time** (milliseconds)
+- **Minimum time** (milliseconds)
+- **Maximum time** (milliseconds)
+- **Number of iterations**
+
+## Quick Start
+
+### 1. Compile Everything
+
 ```bash
-git clone <repository-url>
-cd "201 Project"
+chmod +x compile.sh
+./compile.sh
 ```
 
-### Step 2: Make the Script Executable
+This will:
+- Compile models and utilities
+- Compile all data structures
+- Compile experiment utilities
+- Compile benchmark implementations
+- Compile the unified runner
+- Place all `.class` files in `experiments/classes/` directory
+
+### 2. Run Benchmarks
+
 ```bash
-chmod +x run_tests.sh
+chmod +x run.sh
+./run.sh
 ```
 
-### Step 3: Run All Tests
+This executes `UnifiedBenchmarkRunner` which:
+- Tests all three data structures
+- Uses all configured data sizes
+- Saves results to `experiments/results/` subdirectory
+
+### 3. Manual Execution
+
+From the project root:
+
 ```bash
-./run_tests.sh
+java -cp .:models:utils:datastructures/linear_list:datastructures/avl_tree:datastructures/rbt_tree:experiments/classes experiments.UnifiedBenchmarkRunner
 ```
 
-**That's it!** The script will:
-- ✅ Compile all necessary files
-- ✅ Run tests for Linear List, AVL Tree, and RBT Tree
-- ✅ Display results for all data structures
+## Output Files
 
----
+Results are saved to `experiments/results/`:
 
-## 📝 Manual Steps (Alternative)
+| File | Description |
+|------|-------------|
+| `linear_list_results.csv` | All Linear List benchmark results |
+| `avl_tree_results.csv` | All AVL Tree benchmark results |
+| `rbt_results.csv` | All RBT benchmark results |
+| `comparison_summary.csv` | Side-by-side comparison with winners |
 
-If you prefer to run tests manually:
+### CSV Format (Individual Results)
 
-### Step 1: Compile All Files
+```csv
+Data Size,Operation,Avg Time (ms),Min Time (ms),Max Time (ms),Iterations
+1000,CREATE,0.001234,0.000987,0.001567,1000
+1000,READ,0.456789,0.423456,0.489012,100
+...
+```
+
+### CSV Format (Comparison Summary)
+
+```csv
+Data Size,Operation,Linear List (ms),AVL Tree (ms),RBT (ms),Winner,Best Time (ms),Speedup vs Worst
+1000,CREATE,0.001,0.002,0.003,Linear List,0.001,3.00x
+1000,READ,0.500,0.001,0.002,AVL Tree,0.001,500.00x
+...
+```
+
+## Source Files
+
+### Benchmarks (`src/benchmarks/`)
+- `LinearListBenchmark.java` - Benchmarks for Linear List
+- `AVLTreeBenchmark.java` - Benchmarks for AVL Tree
+- `RBTBenchmark.java` - Benchmarks for RBT (includes TopKRecent)
+
+### Utilities (`src/utils/`)
+- `BenchmarkResult.java` - Data class for storing runtime metrics
+- `PerformanceBenchmark.java` - Shared utilities (warmup, timing, data loading)
+- `ResultsWriter.java` - CSV output utilities
+
+### Main Runner (`src/`)
+- `UnifiedBenchmarkRunner.java` - Orchestrates all benchmarks and generates reports
+
+## Expected Results
+
+### Time Complexity
+- **Linear List**: O(1) insert, O(N) search
+- **AVL Tree**: O(log N) for all operations
+- **RBT**: O(log N) for most operations, O(k) for recent reviews
+
+### Expected Winners
+- **CREATE**: Linear List (fastest insertion)
+- **READ**: AVL Tree or RBT (logarithmic search)
+- **UPDATE**: AVL Tree or RBT (logarithmic search + update)
+- **DELETE**: AVL Tree or RBT (logarithmic search + delete)
+- **RBAR**: Depends on implementation efficiency
+- **RANKINGS**: Depends on algorithm
+- **TOPK**: RBT optimized for this
+- **TOPK_RECENT**: RBT (specialized structure)
+
+## Cleaning Up
+
+To clean compiled files:
+
 ```bash
-javac models/*.java utils/*.java datastructures/linear_list/*.java datastructures/avl_tree/*.java datastructures/rbt_tree/*.java
+rm -rf classes/*
+rm -rf results/*
 ```
 
-### Step 2: Run Individual Tests
+To recompile from scratch:
 
-**Linear List Test:**
 ```bash
-java -cp . datastructures.linear_list.LinearListTest
+rm -rf classes/*
+./compile.sh
 ```
 
-**AVL Tree Test:**
-```bash
-java -cp . datastructures.avl_tree.AVLTest
-```
-
-**RBT Tree Test:**
-```bash
-java -cp . datastructures.rbt_tree.RBTTest
-```
-
----
-
-## 📊 What the Tests Do
-
-Each test suite verifies:
-- ✅ **CREATE**: Adding reviews (`addReview()`, `addReviews()`)
-- ✅ **READ**: Retrieving reviews by airline (`getReviewsByAirline()`, `getAllAirlines()`)
-- ✅ **UPDATE**: Updating existing reviews (`updateReview()`)
-- ✅ **DELETE**: Removing reviews (`deleteReview()`)
-- ✅ **RBAR**: Calculating Recency-Biased Average Rating (`calculateRBAR()`)
-- ✅ **RANKINGS**: Getting airline rankings (`getAirlineRankings()`, `getTopKAirlines()`)
-
-All tests use **real data** from `data/airline.csv` (41,350+ reviews).
-
----
-
-## 📁 Project Structure
-
-```
-201 Project/
-├── data/
-│   └── airline.csv              # Real airline review data (41,350+ reviews)
-├── models/
-│   ├── AirlineReview.java       # Review data model
-│   └── AirlineRanking.java      # Ranking data model
-├── utils/
-│   ├── CSVLoader.java          # Load data from CSV
-│   ├── RBARCalculator.java     # RBAR calculation logic
-│   └── RankingUtils.java       # Ranking calculation logic
-├── datastructures/
-│   ├── linear_list/
-│   │   ├── LinearListReviewStore.java
-│   │   └── LinearListTest.java
-│   ├── avl_tree/
-│   │   ├── AVLNode.java
-│   │   ├── AVLReviewStore.java
-│   │   └── AVLTest.java
-│   └── rbt_tree/
-│       ├── RecencyBiasedTree.java
-│       ├── RBTReviewStore.java
-│       └── RBTTest.java
-└── run_tests.sh                 # One-click test runner
-```
-
----
-
-## 🔍 Troubleshooting
-
-### "Command not found: javac"
-- Install Java JDK (not just JRE)
-- On macOS: `brew install openjdk`
-- On Linux: `sudo apt-get install default-jdk`
-
-### "Permission denied" when running script
-```bash
-chmod +x run_tests.sh
-```
-
-### "FileNotFoundException: data/airline.csv"
-- Make sure you're in the project root directory
-- Verify `data/airline.csv` exists
+## Troubleshooting
 
 ### Compilation Errors
-- Make sure you're in the project root directory
-- Check that all files are present (run `git pull` if needed)
 
----
+If you see package errors, ensure you're running from the project root and the directory structure is correct.
 
-## 📚 Understanding RBAR
+### Runtime Errors
 
-**RBAR (Recency-Biased Average Rating)** is a weighted average that gives more importance to recent reviews:
+If you see `ClassNotFoundException`:
+- Ensure you're running from project root
+- Check that all classes are in `experiments/classes/`
+- Verify the classpath includes `experiments/classes`
 
-- **Recent reviews (last 30 days)**: Full weight (1.0)
-- **Medium age (30 days - 3 years)**: Linear decay (1.0 → 0.1)
-- **Old reviews (3+ years)**: Minimal weight (0.05)
+If CSV loading fails:
+- Verify `data/airline.csv` exists
+- Check file permissions
 
-This ensures current service quality is reflected more accurately than old reviews.
+## Customization
 
----
+### Change Data Sizes
 
-## ✅ Expected Output
-
-When you run `./run_tests.sh`, you should see:
-
-```
-╔════════════════════════════════════════════════════════════════╗
-║         CS201 Project - Running All Tests                     ║
-╚════════════════════════════════════════════════════════════════╝
-
-🔨 Compiling...
-✅ Compilation successful!
-
-════════════════════════════════════════════════════════════════
-TEST 1: Linear List
-════════════════════════════════════════════════════════════════
-📂 Loading airline reviews from: data/airline.csv
-✅ Loaded 41350 reviews from CSV
-...
-✅ ALL TESTS COMPLETED SUCCESSFULLY!
+Edit `src/utils/PerformanceBenchmark.java`:
+```java
+public static final int[] TEST_SIZES = {1000, 5000, 10000, 25000, 41000};
 ```
 
-All three data structures should show **✅ ALL TESTS COMPLETED SUCCESSFULLY!**
+### Change Iteration Counts
 
----
+Edit individual benchmark methods in `src/benchmarks/*Benchmark.java` files.
 
-## 🤝 Contributing
+### Add New Operations
 
-When making changes:
-1. Test your changes: `./run_tests.sh`
-2. Commit: `git commit -m "Your message"`
-3. Push: `git push origin main`
+1. Add benchmark method to each `*Benchmark.java` in `src/benchmarks/`
+2. Update `runAllBenchmarks()` to include it
+3. Recompile and run
 
----
+## Author
 
-## 📧 Questions?
-
-Check the code comments in each file for detailed explanations of:
-- Time complexity
-- Method signatures
-- Implementation details
-
+CS201 Project - Performance Experiments
+Clean, organized directory structure for maintainability

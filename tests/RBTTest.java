@@ -1,38 +1,38 @@
-package datastructures.avl_tree;
-
 import models.AirlineReview;
 import models.AirlineRanking;
 import utils.CSVLoader;
+import datastructures.rbt_tree.RBTReviewStore;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Comprehensive test suite for AVLReviewStore.
+ * Comprehensive test suite for RBTReviewStore.
  * Tests all CRUD operations, RBAR calculations, and rankings using real CSV data.
  */
-public class AVLTest {
+public class RBTTest {
     
     public static void main(String[] args) {
         System.out.println("╔════════════════════════════════════════════════════════════════╗");
-        System.out.println("║          AVL Tree Data Structure - Comprehensive Test          ║");
+        System.out.println("║       RBT Tree Data Structure - Comprehensive Test             ║");
         System.out.println("╚════════════════════════════════════════════════════════════════╝");
         System.out.println();
         
-        // Load real data from CSV
+        // Load real data
         String csvPath = "data/airline.csv";
         System.out.println("📂 Loading airline reviews from: " + csvPath);
         List<AirlineReview> allReviews = CSVLoader.loadAirlineReviews(csvPath);
         System.out.println("✅ Loaded " + allReviews.size() + " reviews from CSV");
         System.out.println();
         
-        // Use a subset for faster testing (first 1000 reviews)
+        // Test with subset
         int testSize = Math.min(1000, allReviews.size());
         List<AirlineReview> testReviews = allReviews.subList(0, testSize);
         System.out.println("🧪 Testing with " + testSize + " reviews");
         System.out.println();
         
-        AVLReviewStore store = new AVLReviewStore();
+        RBTReviewStore store = new RBTReviewStore();
         
-        // ==================== TEST CREATE OPERATIONS ====================
+        // ==================== TEST 1: CREATE ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("TEST 1: CREATE Operations");
         System.out.println("════════════════════════════════════════════════════════════════");
@@ -44,22 +44,18 @@ public class AVLTest {
         System.out.println("✓ Added " + testReviews.size() + " reviews");
         System.out.println("✓ Total reviews in store: " + store.size());
         System.out.println("✓ Insertion time: " + (endTime - startTime) + " ms");
-        System.out.println("✓ Tree height: " + store.getTreeHeight());
-        System.out.println("✓ Tree is balanced: " + store.isBalanced());
         System.out.println();
         
-        // ==================== TEST READ OPERATIONS ====================
+        // ==================== TEST 2: READ ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("TEST 2: READ Operations");
         System.out.println("════════════════════════════════════════════════════════════════");
         
-        // Get all airlines
-        var airlines = store.getAllAirlines();
+        Set<String> airlines = store.getAllAirlines();
         System.out.println("✓ Total unique airlines: " + airlines.size());
         System.out.println("✓ Sample airlines: " + airlines.stream().limit(5).toList());
         System.out.println();
         
-        // Test search for specific airlines
         if (!airlines.isEmpty()) {
             String testAirline = airlines.iterator().next();
             startTime = System.currentTimeMillis();
@@ -76,7 +72,7 @@ public class AVLTest {
         }
         System.out.println();
         
-        // ==================== TEST RBAR CALCULATION ====================
+        // ==================== TEST 3: RBAR ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("TEST 3: RBAR Calculation");
         System.out.println("════════════════════════════════════════════════════════════════");
@@ -89,7 +85,6 @@ public class AVLTest {
             double rbar = store.calculateRBAR(testAirline);
             endTime = System.currentTimeMillis();
             
-            // Calculate simple average for comparison
             double simpleAvg = reviews.stream()
                 .mapToDouble(AirlineReview::getOverallRating)
                 .average()
@@ -99,12 +94,12 @@ public class AVLTest {
             System.out.println("✓ Number of reviews: " + reviews.size());
             System.out.println("✓ RBAR (Recency-Biased): " + String.format("%.3f", rbar));
             System.out.println("✓ Simple Average: " + String.format("%.3f", simpleAvg));
-            System.out.println("✓ Difference: " + String.format("%+.3f", rbar - simpleAvg));
+            System.out.println("✓ Difference: " + String.format("%.3f", rbar - simpleAvg));
             System.out.println("✓ RBAR calculation time: " + (endTime - startTime) + " ms");
         }
         System.out.println();
         
-        // ==================== TEST RANKINGS ====================
+        // ==================== TEST 4: RANKINGS ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("TEST 4: Airline Rankings");
         System.out.println("════════════════════════════════════════════════════════════════");
@@ -116,15 +111,16 @@ public class AVLTest {
         System.out.println("✓ Calculated rankings for " + rankings.size() + " airlines");
         System.out.println("✓ Ranking calculation time: " + (endTime - startTime) + " ms");
         System.out.println();
+        
+        List<AirlineRanking> top10 = store.getTopKAirlines(10);
         System.out.println("Top 10 Airlines by RBAR:");
         System.out.println("─────────────────────────────────────────────────────────────");
-        List<AirlineRanking> top10 = store.getTopKAirlines(10);
         for (int i = 0; i < top10.size(); i++) {
-            System.out.println((i + 1) + ". " + top10.get(i));
+            System.out.println((i+1) + ". " + top10.get(i));
         }
         System.out.println();
         
-        // ==================== TEST UPDATE OPERATION ====================
+        // ==================== TEST 5: UPDATE ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("TEST 5: UPDATE Operation");
         System.out.println("════════════════════════════════════════════════════════════════");
@@ -137,15 +133,27 @@ public class AVLTest {
                 AirlineReview oldReview = reviews.get(0);
                 String newReviewId = "TEST-UPDATE-" + System.currentTimeMillis();
                 AirlineReview newReview = new AirlineReview(
-                    newReviewId, oldReview.getAirlineName(), oldReview.getLink(), "UPDATED TITLE",
-                    oldReview.getAuthor(), oldReview.getAuthorCountry(), oldReview.getDate(),
-                    "UPDATED CONTENT", oldReview.getAircraft(), oldReview.getTypeTraveller(),
-                    oldReview.getCabinFlown(), oldReview.getRoute(),
-                    10.0, // Updated rating
-                    oldReview.getSeatComfortRating(), oldReview.getCabinStaffRating(),
-                    oldReview.getFoodBeveragesRating(), oldReview.getInflightEntertainmentRating(),
-                    oldReview.getGroundServiceRating(), oldReview.getWifiConnectivityRating(),
-                    oldReview.getValueMoneyRating(), oldReview.getRecommended()
+                    newReviewId,
+                    oldReview.getAirlineName(),
+                    oldReview.getLink(),
+                    oldReview.getTitle(),
+                    oldReview.getAuthor(),
+                    oldReview.getAuthorCountry(),
+                    oldReview.getDate(),
+                    oldReview.getContent(),
+                    oldReview.getAircraft(),
+                    oldReview.getTypeTraveller(),
+                    oldReview.getCabinFlown(),
+                    oldReview.getRoute(),
+                    10.0,  // Updated rating
+                    oldReview.getSeatComfortRating(),
+                    oldReview.getCabinStaffRating(),
+                    oldReview.getFoodBeveragesRating(),
+                    oldReview.getInflightEntertainmentRating(),
+                    oldReview.getGroundServiceRating(),
+                    oldReview.getWifiConnectivityRating(),
+                    oldReview.getValueMoneyRating(),
+                    oldReview.getRecommended()
                 );
                 
                 boolean updated = store.updateReview(testAirline, oldReview, newReview);
@@ -153,52 +161,61 @@ public class AVLTest {
                 
                 if (updated) {
                     List<AirlineReview> updatedReviews = store.getReviewsByAirline(testAirline);
-                    System.out.println("✓ Verified review was updated");
-                    System.out.println("✓ New rating: " + updatedReviews.get(0).getOverallRating());
+                    boolean found = updatedReviews.stream()
+                        .anyMatch(r -> r.equals(newReview) && r.getOverallRating() == 10.0);
+                    System.out.println("✓ Verified review was updated: " + found);
+                    System.out.println("✓ New rating: " + newReview.getOverallRating());
                 }
             }
         }
         System.out.println();
         
-        // ==================== TEST DELETE OPERATION ====================
+        // ==================== TEST 6: DELETE ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("TEST 6: DELETE Operation");
         System.out.println("════════════════════════════════════════════════════════════════");
         
-        int sizeBeforeDelete = store.size();
         if (!airlines.isEmpty()) {
             String testAirline = airlines.iterator().next();
             List<AirlineReview> reviews = store.getReviewsByAirline(testAirline);
             
             if (!reviews.isEmpty()) {
+                int sizeBefore = store.size();
                 AirlineReview reviewToDelete = reviews.get(0);
+                
                 boolean deleted = store.deleteReview(testAirline, reviewToDelete);
+                int sizeAfter = store.size();
+                
                 System.out.println("✓ Delete operation: " + (deleted ? "SUCCESS" : "FAILED"));
-                System.out.println("✓ Size before delete: " + sizeBeforeDelete);
-                System.out.println("✓ Size after delete: " + store.size());
-                System.out.println("✓ Tree is still balanced: " + store.isBalanced());
+                System.out.println("✓ Size before delete: " + sizeBefore);
+                System.out.println("✓ Size after delete: " + sizeAfter);
             }
         }
         System.out.println();
         
-        // ==================== TEST TREE PROPERTIES ====================
+        // ==================== TEST 7: Top-K Recent ====================
         System.out.println("════════════════════════════════════════════════════════════════");
-        System.out.println("TEST 7: AVL Tree Properties");
+        System.out.println("TEST 7: Top-K Recent Reviews");
         System.out.println("════════════════════════════════════════════════════════════════");
         
-        System.out.println("✓ Total reviews: " + store.size());
-        System.out.println("✓ Unique airlines: " + store.getAllAirlines().size());
-        System.out.println("✓ Tree height: " + store.getTreeHeight());
-        System.out.println("✓ Tree is balanced: " + store.isBalanced());
-        System.out.println("✓ Expected max height (log2 N): ~" + 
-                         (int) Math.ceil(Math.log(store.getAllAirlines().size()) / Math.log(2)));
+        if (!airlines.isEmpty()) {
+            String testAirline = airlines.iterator().next();
+            List<AirlineReview> top5 = store.getTopKRecentReviews(testAirline, 5);
+            
+            System.out.println("✓ Airline: " + testAirline);
+            System.out.println("✓ Top 5 most recent reviews:");
+            for (int i = 0; i < top5.size(); i++) {
+                System.out.println("  " + (i+1) + ". " + top5.get(i).getDate() + 
+                                 " - Rating: " + top5.get(i).getOverallRating());
+            }
+        }
         System.out.println();
         
-        // ==================== SUMMARY ====================
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println("✅ ALL TESTS COMPLETED SUCCESSFULLY!");
         System.out.println("════════════════════════════════════════════════════════════════");
         System.out.println();
+        
         System.out.println("Operations tested:");
         System.out.println("  ✓ CREATE: addReview(), addReviews()");
         System.out.println("  ✓ READ: getReviewsByAirline(), getAllAirlines()");
@@ -206,7 +223,7 @@ public class AVLTest {
         System.out.println("  ✓ DELETE: deleteReview()");
         System.out.println("  ✓ RBAR: calculateRBAR()");
         System.out.println("  ✓ RANKINGS: getAirlineRankings(), getTopKAirlines()");
-        System.out.println("  ✓ TREE PROPERTIES: getTreeHeight(), isBalanced()");
+        System.out.println("  ✓ TOP-K RECENT: getTopKRecentReviews()");
     }
 }
 
