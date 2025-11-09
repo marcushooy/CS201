@@ -12,7 +12,7 @@ cd "$(dirname "$0")/.."
 
 # Compile all files (models, utils, datastructures, and test files)
 echo "🔨 Compiling..."
-javac models/*.java utils/*.java datastructures/linear_list/*.java datastructures/avl_tree/*.java datastructures/rbt_tree/*.java tests/*.java
+javac -d tests/out models/*.java utils/*.java datastructures/linear_list/*.java datastructures/avl_tree/*.java datastructures/rbt_tree/*.java tests/*.java
 
 if [ $? -ne 0 ]; then
     echo "❌ Compilation failed!"
@@ -26,19 +26,19 @@ echo ""
 echo "════════════════════════════════════════════════════════════════"
 echo "TEST 1: Linear List"
 echo "════════════════════════════════════════════════════════════════"
-java -cp .:tests LinearListTest 2>&1 | grep -v "Invalid CSV line"
+java -cp tests/out LinearListTest 2>&1 | grep -v "Invalid CSV line"
 
 echo ""
 echo "════════════════════════════════════════════════════════════════"
 echo "TEST 2: AVL Tree"
 echo "════════════════════════════════════════════════════════════════"
-java -cp .:tests AVLTest 2>&1 | grep -v "Invalid CSV line"
+java -cp tests/out AVLTest 2>&1 | grep -v "Invalid CSV line"
 
 echo ""
 echo "════════════════════════════════════════════════════════════════"
 echo "TEST 3: RBT Tree"
 echo "════════════════════════════════════════════════════════════════"
-java -cp .:tests RBTTest 2>&1 | grep -v "Invalid CSV line"
+java -cp tests/out RBTTest 2>&1 | grep -v "Invalid CSV line"
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"

@@ -6,7 +6,7 @@ echo "================================================"
 echo ""
 
 echo "Step 1: Compiling models..."
-javac models/*.java
+javac -d out models/*.java
 if [ $? -eq 0 ]; then
     echo "✓ Models compiled successfully"
 else
@@ -16,7 +16,7 @@ fi
 
 echo ""
 echo "Step 2: Compiling utilities..."
-javac -cp . utils/*.java
+javac -d out -cp out utils/*.java
 if [ $? -eq 0 ]; then
     echo "✓ Utilities compiled successfully"
 else
@@ -26,9 +26,9 @@ fi
 
 echo ""
 echo "Step 3: Compiling data structures..."
-javac -cp .:models:utils datastructures/linear_list/*.java
-javac -cp .:models:utils datastructures/avl_tree/*.java
-javac -cp .:models:utils datastructures/rbt_tree/*.java
+javac -d out -cp out datastructures/linear_list/*.java
+javac -d out -cp out datastructures/avl_tree/*.java
+javac -d out -cp out datastructures/rbt_tree/*.java
 if [ $? -eq 0 ]; then
     echo "✓ Data structures compiled successfully"
 else
@@ -38,7 +38,7 @@ fi
 
 echo ""
 echo "Step 4: Compiling experiment utilities..."
-javac -d experiments/classes -cp .:models:utils experiments/src/utils/*.java
+javac -d out -cp out experiments/src/utils/*.java
 if [ $? -eq 0 ]; then
     echo "✓ Experiment utilities compiled successfully"
 else
@@ -48,7 +48,7 @@ fi
 
 echo ""
 echo "Step 5: Compiling experiment benchmarks..."
-javac -d experiments/classes -cp .:models:utils:datastructures/linear_list:datastructures/avl_tree:datastructures/rbt_tree:experiments/classes experiments/src/benchmarks/*.java
+javac -d out -cp out experiments/src/benchmarks/*.java
 if [ $? -eq 0 ]; then
     echo "✓ Experiment benchmarks compiled successfully"
 else
@@ -58,7 +58,7 @@ fi
 
 echo ""
 echo "Step 6: Compiling unified runner..."
-javac -d experiments/classes -cp .:models:utils:datastructures/linear_list:datastructures/avl_tree:datastructures/rbt_tree:experiments/classes experiments/src/UnifiedBenchmarkRunner.java
+javac -d out -cp out experiments/src/UnifiedBenchmarkRunner.java
 if [ $? -eq 0 ]; then
     echo "✓ Unified runner compiled successfully"
 else
@@ -70,6 +70,8 @@ echo ""
 echo "================================================"
 echo "  Compilation Complete!"
 echo "================================================"
+echo ""
+echo "All class files compiled to: out/"
 echo ""
 echo "To run the benchmarks:"
 echo "  ./run.sh"

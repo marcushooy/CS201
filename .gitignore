@@ -1,0 +1,30 @@
+# Compiled class files
+*.class
+
+# Output directories
+out/
+tests/out/
+experiments/classes/
+
+# Benchmark results (CSV files)
+**/results/*.csv
+experiments/results/*.csv
+
+# Keep directory structure
+!experiments/results/.gitkeep
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Temporary files
+*.tmp
+*.log
+

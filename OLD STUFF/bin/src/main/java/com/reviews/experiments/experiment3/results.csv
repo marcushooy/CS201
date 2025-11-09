@@ -1,6 +1,0 @@
-Data Size,Insertion Time (ms),Search Time (ms),RBAR Calculation (ms),Top-5 Retrieval (ms),Top-10 Retrieval (ms),Top-25 Retrieval (ms),Top-50 Retrieval (ms),Tree Height,Is Balanced
-1000,2.068,0.002,0.006,0.005,0.003,0.003,0.004,25,false
-5000,8.187,0.002,0.005,0.001,0.001,0.001,0.001,29,false
-10000,16.594,0.001,0.003,0.001,0.001,0.001,0.001,36,false
-25000,41.030,0.003,0.004,0.002,0.002,0.003,0.003,22,false
-41457,67.869,0.003,0.007,0.002,0.002,0.002,0.002,161,false

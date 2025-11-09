@@ -6,7 +6,7 @@ echo "================================================"
 echo ""
 
 # Run the unified benchmark runner
-java -cp .:models:utils:datastructures/linear_list:datastructures/avl_tree:datastructures/rbt_tree:experiments/classes experiments.UnifiedBenchmarkRunner
+java -cp out experiments.UnifiedBenchmarkRunner
 
 echo ""
 echo "================================================"
