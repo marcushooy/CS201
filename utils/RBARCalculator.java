@@ -13,12 +13,15 @@ import java.util.List;
  * (Linear List, AVL Tree, RBT Tree) will use to ensure consistent results.
  * 
  * Weighting scheme:
- * - Recent reviews (last 30 days): weight = 1.0 (full weight)
- * - Medium age reviews (30 days to 3 years): linear decay from 1.0 to 0.1
+ * - Recent reviews (last 6 months): weight = 1.0 (full weight)
+ * - Medium age reviews (6 months to 3 years): exponential decay using formula:
+ *   weight = 0.05 + 0.95 * (1 - ((m - 6) / (N - 6))^p)
+ *   where m = age in months, N = 36 months, p = power parameter for decay curve
  * - Old reviews (3+ years): weight = 0.05 (minimal weight)
  */
 public class RBARCalculator {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final double POWER_PARAMETER = 2.0; // Controls steepness of exponential decay
     
     /**
      * Calculate RBAR for a list of reviews.
@@ -31,9 +34,10 @@ public class RBARCalculator {
         if (reviews == null || reviews.isEmpty()) {
             return 0.0;
         }
-        
-        LocalDate now = LocalDate.now();
-        LocalDate thirtyDaysAgo = now.minusDays(30);
+
+        // Set to the most recent date in airline.csv, but will use LocalDate.now() if updated datasets are used with updated rankings
+        LocalDate now = LocalDate.of(2015, 8, 2);
+        LocalDate sixMonthsAgo = now.minusMonths(6);
         LocalDate threeYearsAgo = now.minusYears(3);
         
         double weightedSum = 0.0;
@@ -41,7 +45,7 @@ public class RBARCalculator {
         
         for (AirlineReview review : reviews) {
             LocalDate reviewDate = parseDate(review.getDate());
-            double weight = calculateRecencyWeight(reviewDate, thirtyDaysAgo, threeYearsAgo);
+            double weight = calculateRecencyWeight(reviewDate, now, sixMonthsAgo, threeYearsAgo);
             
             weightedSum += review.getOverallRating() * weight;
             totalWeight += weight;
@@ -55,19 +59,28 @@ public class RBARCalculator {
      * This is the core weighting algorithm shared by all data structures.
      * 
      * @param reviewDate The date of the review
-     * @param thirtyDaysAgo Date 30 days ago (cutoff for recent reviews)
+     * @param now Current reference date (2015-08-02 for this dataset)
+     * @param sixMonthsAgo Date 6 months ago (cutoff for recent reviews)
      * @param threeYearsAgo Date 3 years ago (cutoff for old reviews)
      * @return Weight value between 0.05 and 1.0
      */
-    public static double calculateRecencyWeight(LocalDate reviewDate, LocalDate thirtyDaysAgo, LocalDate threeYearsAgo) {
-        if (reviewDate.isAfter(thirtyDaysAgo)) {
-            // Recent reviews (last 30 days): weight = 1.0
+    public static double calculateRecencyWeight(LocalDate reviewDate, LocalDate now, LocalDate sixMonthsAgo, LocalDate threeYearsAgo) {
+        if (reviewDate.isAfter(sixMonthsAgo) || reviewDate.isEqual(sixMonthsAgo)) {
+            // Recent reviews (last 6 months): weight = 1.0
             return 1.0;
         } else if (reviewDate.isAfter(threeYearsAgo)) {
-            // Medium age reviews (30 days to 3 years): linear decay
-            long daysSinceThirtyDays = ChronoUnit.DAYS.between(thirtyDaysAgo, reviewDate);
-            long totalDays = ChronoUnit.DAYS.between(threeYearsAgo, thirtyDaysAgo);
-            return Math.max(0.1, 1.0 - (double) daysSinceThirtyDays / totalDays);
+            // Medium age reviews (6 months to 3 years): exponential decay
+            // Calculate age in months
+            long monthsOld = ChronoUnit.MONTHS.between(reviewDate, now);
+            double m = (double) monthsOld; // Age in months
+            double N = 36.0; // 3 years in months
+            
+            // Formula: weight = 0.05 + 0.95 * (1 - ((m - 6) / (N - 6))^p)
+            double normalizedAge = (m - 6.0) / (N - 6.0); // Range: 0 to 1
+            double decayFactor = Math.pow(normalizedAge, POWER_PARAMETER);
+            double weight = 0.05 + 0.95 * (1.0 - decayFactor);
+            
+            return Math.max(0.05, Math.min(1.0, weight)); // Clamp between 0.05 and 1.0
         } else {
             // Old reviews (3+ years): minimal weight
             return 0.05;

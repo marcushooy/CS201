@@ -3,7 +3,7 @@
 # CS201 Project - Run All Tests
 
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║         CS201 Project - Running All Tests                     ║"
+echo "║         CS201 Project - Running All Tests                      ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -39,6 +39,6 @@ java -cp . datastructures.rbt_tree.RBTTest 2>&1 | grep -v "Invalid CSV line"
 
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
-echo "║         ✅ ALL TESTS COMPLETE!                                ║"
+echo "║         ✅ ALL TESTS COMPLETE!                                 ║"
 echo "╚════════════════════════════════════════════════════════════════╝"
 
