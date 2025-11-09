@@ -111,7 +111,7 @@ public class CSVLoader {
     }
     
     /**
-     * Parse CSV fields handling quoted strings.
+     * Parse CSV fields handling quoted strings and escaped quotes ("").
      */
     private static List<String> parseCSVFields(String line) {
         List<String> fields = new ArrayList<>();
@@ -122,7 +122,15 @@ public class CSVLoader {
             char c = line.charAt(i);
             
             if (c == '"') {
-                inQuotes = !inQuotes;
+                // Check if this is an escaped quote ("")
+                if (i < line.length() - 1 && line.charAt(i + 1) == '"') {
+                    // This is an escaped quote - add one quote to field and skip next
+                    currentField.append('"');
+                    i++; // Skip the next quote
+                } else {
+                    // This is a field delimiter quote - toggle inQuotes state
+                    inQuotes = !inQuotes;
+                }
             } else if (c == ',' && !inQuotes) {
                 fields.add(currentField.toString().trim());
                 currentField = new StringBuilder();
@@ -158,4 +166,3 @@ public class CSVLoader {
         }
     }
 }
-
