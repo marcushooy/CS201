@@ -1,4 +1,4 @@
-package datastructures.AVL_Tree;
+package datastructures.avl_tree;
 
 import models.AirlineReview;
 import models.AirlineRanking;
