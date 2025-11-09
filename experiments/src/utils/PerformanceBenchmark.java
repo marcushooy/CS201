@@ -114,11 +114,10 @@ public class PerformanceBenchmark {
      * @param iterations Number of warmup iterations (default: WARMUP_ITERATIONS)
      */
     public static void warmup(Runnable warmupOp, int iterations) {
-        System.out.println("Warming up JVM (" + iterations + " iterations)...");
+        // Silent warmup - no console output
         for (int i = 0; i < iterations; i++) {
             warmupOp.run();
         }
-        System.out.println("Warmup complete.");
     }
     
     /**
@@ -159,6 +158,7 @@ public class PerformanceBenchmark {
         }
         
         double avgTimeMs = totalTime / (double)iterations / 1_000_000.0;
+        System.out.println("  " + operation + ": " + formatTime(avgTimeMs) + " average");
         return new BenchmarkResult(dataStructure, operation, dataSize, avgTimeMs, minTime, maxTime, iterations);
     }
     
