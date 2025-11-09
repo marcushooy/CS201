@@ -17,11 +17,12 @@ import java.util.List;
  * - Medium age reviews (6 months to 3 years): exponential decay using formula:
  *   weight = 0.05 + 0.95 * (1 - ((m - 6) / (N - 6))^p)
  *   where m = age in months, N = 36 months, p = power parameter for decay curve
+ *   p = 1.26, reviews that are 2 years oldget approximately 0.5 weight
  * - Old reviews (3+ years): weight = 0.05 (minimal weight)
  */
 public class RBARCalculator {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final double POWER_PARAMETER = 2.0; // Controls steepness of exponential decay
+    private static final double POWER_PARAMETER = 1.26; // Controls steepness of exponential decay
     
     /**
      * Calculate RBAR for a list of reviews.
