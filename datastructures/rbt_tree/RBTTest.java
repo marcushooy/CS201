@@ -132,7 +132,9 @@ public class RBTTest {
             
             if (!reviews.isEmpty()) {
                 AirlineReview oldReview = reviews.get(0);
+                String newReviewId = "TEST-UPDATE-" + System.currentTimeMillis();
                 AirlineReview newReview = new AirlineReview(
+                    newReviewId,
                     oldReview.getAirlineName(),
                     oldReview.getLink(),
                     oldReview.getTitle(),

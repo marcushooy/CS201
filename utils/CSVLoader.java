@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * CSVLoader - Utility class to load airline reviews from CSV file.
@@ -14,6 +15,7 @@ public class CSVLoader {
     
     /**
      * Load airline reviews from the CSV file.
+     * Each review is assigned a unique random ID that remains constant regardless of position.
      * 
      * @param csvPath Path to the airline.csv file
      * @return List of AirlineReview objects
@@ -34,7 +36,9 @@ public class CSVLoader {
             while ((line = br.readLine()) != null) {
                 lineNumber++;
                 try {
-                    AirlineReview review = parseCSVLine(line);
+                    // Generate unique random ID for each review
+                    String reviewId = "REV-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+                    AirlineReview review = parseCSVLine(line, reviewId);
                     if (review != null) {
                         reviews.add(review);
                     }
@@ -54,8 +58,12 @@ public class CSVLoader {
     /**
      * Parse a single CSV line into an AirlineReview object.
      * CSV format: "airline_name","link","title","author","author_country","date","content","aircraft","type_traveller","cabin_flown","route","overall_rating","seat_comfort_rating","cabin_staff_rating","food_beverages_rating","inflight_entertainment_rating","ground_service_rating","wifi_connectivity_rating","value_money_rating","recommended"
+     * 
+     * @param line The CSV line to parse
+     * @param reviewId Unique identifier for this review
+     * @return AirlineReview object or null if parsing fails
      */
-    private static AirlineReview parseCSVLine(String line) {
+    private static AirlineReview parseCSVLine(String line, String reviewId) {
         // Parse CSV line with quoted fields
         List<String> fields = parseCSVFields(line);
         
@@ -89,7 +97,7 @@ public class CSVLoader {
             int recommended = parseInt(fields.get(19), 0);
             
             return new AirlineReview(
-                airlineName, link, title, author, authorCountry, date, content,
+                reviewId, airlineName, link, title, author, authorCountry, date, content,
                 aircraft, typeTraveller, cabinFlown, route,
                 overallRating, seatComfortRating, cabinStaffRating,
                 foodBeveragesRating, inflightEntertainmentRating,

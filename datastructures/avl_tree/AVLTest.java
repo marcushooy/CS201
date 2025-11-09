@@ -135,8 +135,9 @@ public class AVLTest {
             
             if (!reviews.isEmpty()) {
                 AirlineReview oldReview = reviews.get(0);
+                String newReviewId = "TEST-UPDATE-" + System.currentTimeMillis();
                 AirlineReview newReview = new AirlineReview(
-                    oldReview.getAirlineName(), oldReview.getLink(), "UPDATED TITLE",
+                    newReviewId, oldReview.getAirlineName(), oldReview.getLink(), "UPDATED TITLE",
                     oldReview.getAuthor(), oldReview.getAuthorCountry(), oldReview.getDate(),
                     "UPDATED CONTENT", oldReview.getAircraft(), oldReview.getTypeTraveller(),
                     oldReview.getCabinFlown(), oldReview.getRoute(),

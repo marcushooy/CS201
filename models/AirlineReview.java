@@ -8,6 +8,9 @@ import java.util.Objects;
  * to access review data for RBAR calculations and comparisons.
  */
 public class AirlineReview {
+    // Unique identifier for each review
+    private String reviewId;
+    
     // Core fields from CSV
     private String airlineName;
     private String link;
@@ -35,13 +38,14 @@ public class AirlineReview {
     /**
      * Constructor to create an AirlineReview from CSV data.
      */
-    public AirlineReview(String airlineName, String link, String title, String author, 
+    public AirlineReview(String reviewId, String airlineName, String link, String title, String author, 
                         String authorCountry, String date, String content, String aircraft,
                         String typeTraveller, String cabinFlown, String route,
                         double overallRating, double seatComfortRating, double cabinStaffRating,
                         double foodBeveragesRating, double inflightEntertainmentRating,
                         double groundServiceRating, double wifiConnectivityRating,
                         double valueMoneyRating, int recommended) {
+        this.reviewId = reviewId;
         this.airlineName = airlineName;
         this.link = link;
         this.title = title;
@@ -65,6 +69,7 @@ public class AirlineReview {
     }
     
     // Getters for core fields
+    public String getReviewId() { return reviewId; }
     public String getAirlineName() { return airlineName; }
     public String getDate() { return date; }
     public double getOverallRating() { return overallRating; }
@@ -90,13 +95,13 @@ public class AirlineReview {
     
     @Override
     public String toString() {
-        return String.format("AirlineReview[%s, %s, Rating: %.1f]", 
-                           airlineName, date, overallRating);
+        return String.format("AirlineReview[ID: %s, %s, %s, Rating: %.1f]", 
+                           reviewId, airlineName, date, overallRating);
     }
     
     /**
      * Equals method for comparing reviews.
-     * Two reviews are considered equal if they have the same airline, date, author, and link.
+     * Two reviews are considered equal if they have the same reviewId.
      */
     @Override
     public boolean equals(Object obj) {
@@ -104,15 +109,12 @@ public class AirlineReview {
         if (obj == null || getClass() != obj.getClass()) return false;
         
         AirlineReview that = (AirlineReview) obj;
-        return Objects.equals(airlineName, that.airlineName) &&
-               Objects.equals(date, that.date) &&
-               Objects.equals(author, that.author) &&
-               Objects.equals(link, that.link);
+        return Objects.equals(reviewId, that.reviewId);
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(airlineName, date, author, link);
+        return Objects.hash(reviewId);
     }
 }
 
