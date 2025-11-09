@@ -1,3 +1,5 @@
+package models;
+
 /**
  * AirlineReview class to represent a single airline review from the CSV data.
  * This class encapsulates all the review information and provides methods
